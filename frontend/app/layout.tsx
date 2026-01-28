@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Link from "next/link";
 import "./globals.css";
-import { Button } from "@/components/ui/button";
+import { Header } from "@/components/Header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,34 +29,14 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="min-h-screen flex flex-col">
-          <header className="border-b">
-            <div className="container mx-auto px-4 py-4">
-              <nav className="flex items-center justify-between">
-                <Link href="/" className="text-xl font-bold">
-                  野球記録システム
-                </Link>
-                <div className="flex gap-2">
-                  <Button asChild variant="ghost">
-                    <Link href="/">ホーム</Link>
-                  </Button>
-                  <Button asChild variant="ghost">
-                    <Link href="/games">試合一覧</Link>
-                  </Button>
-                  <Button asChild variant="ghost">
-                    <Link href="/players">選手一覧</Link>
-                  </Button>
-                  <Button asChild variant="ghost">
-                    <Link href="/teams">チーム一覧</Link>
-                  </Button>
-                </div>
-              </nav>
-            </div>
-          </header>
-          <main className="flex-1 container mx-auto px-4 py-8">
+          <Header />
+          <main className="flex-1 container mx-auto max-w-[1024px] px-4 py-4">
             {children}
           </main>
           <footer className="border-t py-4 text-center text-sm text-muted-foreground">
-            <p>© 2025 野球記録システム</p>
+            <div className="container mx-auto max-w-[1024px] px-4">
+              <p>© 2025 野球記録システム</p>
+            </div>
           </footer>
         </div>
       </body>

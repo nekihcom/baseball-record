@@ -4,15 +4,17 @@ import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div>
-        <h1 className="text-4xl font-bold mb-4">野球記録ダッシュボード</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl font-bold mb-2">
+          野球記録ダッシュボード
+        </h1>
+        <p className="text-sm text-muted-foreground">
           Supabaseに保存された野球記録データを表示・検索できます
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4">
         <Card>
           <CardHeader>
             <CardTitle>試合一覧</CardTitle>
@@ -20,7 +22,7 @@ export default function Home() {
           </CardHeader>
           <CardContent>
             <Button asChild className="w-full">
-              <Link href="/games">試合一覧を見る</Link>
+              <Link href="/game">試合一覧を見る</Link>
             </Button>
           </CardContent>
         </Card>
@@ -32,7 +34,7 @@ export default function Home() {
           </CardHeader>
           <CardContent>
             <Button asChild className="w-full">
-              <Link href="/players">選手一覧を見る</Link>
+              <Link href="/player">選手一覧を見る</Link>
             </Button>
           </CardContent>
         </Card>
@@ -44,7 +46,7 @@ export default function Home() {
           </CardHeader>
           <CardContent>
             <Button asChild className="w-full">
-              <Link href="/teams">チーム一覧を見る</Link>
+              <Link href="/team">チーム一覧を見る</Link>
             </Button>
           </CardContent>
         </Card>
