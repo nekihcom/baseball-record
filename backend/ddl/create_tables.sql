@@ -80,6 +80,7 @@ CREATE TABLE transaction_game_info (
 CREATE TABLE transaction_game_hitter_stats (
     key TEXT PRIMARY KEY,
     team TEXT,
+    url TEXT,
     date TEXT,
     start_time TEXT,
     player_number INTEGER,
@@ -116,6 +117,7 @@ CREATE TABLE transaction_game_hitter_stats (
 CREATE TABLE transaction_game_pitcher_stats (
     key TEXT PRIMARY KEY,
     team TEXT,
+    url TEXT,
     date TEXT,
     start_time TEXT,
     player_number INTEGER,

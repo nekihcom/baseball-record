@@ -158,6 +158,7 @@ orcas_1, orcas, 1, 選手名B, ニックネームB
 
 | 項目名 | 型 | 説明 |
 |--------|-----|------|
+| key | 文字列 | `${team}_${date}_${start_time}_${game_id}`（URL中のgame_idを使用） |
 | team | 文字列 | チームコード |
 | url | 文字列 | 試合詳細ページのURL |
 | type | 文字列 | 試合種別（例: 練習試合、公式戦） |
@@ -180,7 +181,9 @@ orcas_1, orcas, 1, 選手名B, ニックネームB
 
 | 項目名 | 型 | 説明 |
 |--------|-----|------|
+| key | 文字列 | `${team}_${date}_${start_time}_${game_id}_${player_number}_${player}` |
 | team | 文字列 | チームコード |
+| url | 文字列 | 試合別成績ページのURL |
 | date | 文字列 | 試合日（yyyymmdd形式） |
 | start_time | 文字列 | 開始時刻 |
 | player_number | 数値 | 背番号 |
@@ -213,7 +216,9 @@ orcas_1, orcas, 1, 選手名B, ニックネームB
 
 | 項目名 | 型 | 説明 |
 |--------|-----|------|
+| key | 文字列 | `${team}_${date}_${start_time}_${game_id}_${player_number}_${player}` |
 | team | 文字列 | チームコード |
+| url | 文字列 | 試合別成績ページのURL |
 | date | 文字列 | 試合日（yyyymmdd形式） |
 | start_time | 文字列 | 開始時刻 |
 | player_number | 数値 | 背番号 |

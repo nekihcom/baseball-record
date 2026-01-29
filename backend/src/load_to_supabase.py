@@ -2,8 +2,8 @@
 """
 CSV を読み込み、Supabase の野球記録テーブルに投入するスクリプト。
 
-実行時カレントディレクトリはプロジェクトルートを想定。
-.env に SUPABASE_URL と SUPABASE_SERVICE_KEY を設定すること。
+実行時カレントディレクトリはどこでも可（スクリプト配置から backend を基準にパス解決）。
+.env はプロジェクトルートまたは backend に SUPABASE_URL と SUPABASE_SERVICE_KEY を設定すること。
 """
 
 from __future__ import annotations
@@ -17,10 +17,10 @@ from pathlib import Path
 from dotenv import load_dotenv
 from supabase import create_client
 
-# プロジェクトルート = カレントディレクトリ
-ROOT = Path.cwd()
-INPUT_DIR = ROOT / "input"
-OUTPUT_DIR = ROOT / "output"
+# backend ディレクトリ = このスクリプトの親の親（backend/src/load_to_supabase.py → backend）
+BACKEND_DIR = Path(__file__).resolve().parent.parent
+INPUT_DIR = BACKEND_DIR / "input"
+OUTPUT_DIR = BACKEND_DIR / "output"
 BATCH_SIZE = 500
 
 # テーブル名 -> (CSV パス, 整数カラム, 小数カラム)

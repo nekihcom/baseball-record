@@ -23,6 +23,7 @@ prepare_csv_filename = utils.prepare_csv_filename
 
 
 def scrape_game_hitter_stats(url, team_name, player_lookup=None):
+    print(f"scrape_game_hitter_stats: {url}")
     """
     試合別成績ページから打者成績を抽出する。
     1試合につき、打者ごとの行（辞書のリスト）を返す。
@@ -42,6 +43,18 @@ def scrape_game_hitter_stats(url, team_name, player_lookup=None):
     team = team_name
     date = extract_date(soup)
     start_time = extract_start_time(soup)
+
+    # game_id: url を'/'で分割したときに 'game' の次の要素
+    game_id = ""
+    if url:
+        try:
+            parts = url.split("/")
+            if "game" in parts:
+                idx = parts.index("game")
+                if idx + 1 < len(parts):
+                    game_id = parts[idx + 1]
+        except Exception:
+            game_id = ""
 
     # table.stats_batting.table > tbody > tr
     table = soup.select_one('table.stats_batting.table')
@@ -76,12 +89,13 @@ def scrape_game_hitter_stats(url, team_name, player_lookup=None):
         lookup_key = f"{team}_{pnum}"
         player = player_lookup.get(lookup_key, web_display)
 
-        # key: ${team}_${date}_${start_time}_${player_number}_${player}
-        row_key = f"{team}_{date}_{start_time}_{pnum}_{player}"
+        # key: ${team}_${date}_${start_time}_${game_id}_${player_number}_${player}
+        row_key = f"{team}_{date}_{start_time}_{game_id}_{pnum}_{player}"
 
         row = {
             'key': row_key,
             'team': team,
+            'url': url,
             'date': date,
             'start_time': start_time,
             'player_number': pnum,
@@ -186,7 +200,7 @@ def save_to_csv(rows, output_dir='output'):
     filepath = os.path.join(output_dir, filename)
 
     fieldnames = [
-        'key', 'team', 'date', 'start_time',
+        'key', 'team', 'url', 'date', 'start_time',
         'player_number', 'player', 'entry', 'order', 'position',
         'plate_apperance', 'at_bat', 'hit', 'hr', 'rbi', 'run',
         'stolen_base', 'double', 'triple',

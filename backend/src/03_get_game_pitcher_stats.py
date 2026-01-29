@@ -74,6 +74,18 @@ def scrape_game_pitcher_stats(url, team_name, player_lookup=None):
     date = extract_date(soup)
     start_time = extract_start_time(soup)
 
+    # game_id: url を'/'で分割したときに 'game' の次の要素
+    game_id = ""
+    if url:
+        try:
+            parts = url.split("/")
+            if "game" in parts:
+                idx = parts.index("game")
+                if idx + 1 < len(parts):
+                    game_id = parts[idx + 1]
+        except Exception:
+            game_id = ""
+
     # table.stats_pitching.table > tbody > tr
     table = soup.select_one('table.stats_pitching.table')
     if table is None:
@@ -107,8 +119,8 @@ def scrape_game_pitcher_stats(url, team_name, player_lookup=None):
         lookup_key = f"{team}_{pnum}"
         player = player_lookup.get(lookup_key, web_display)
 
-        # key: ${team}_${date}_${start_time}_${player_number}_${player}
-        row_key = f"{team}_{date}_{start_time}_{pnum}_{player}"
+        # key: ${team}_${date}_${start_time}_${game_id}_${player_number}_${player}
+        row_key = f"{team}_{date}_{start_time}_{game_id}_{pnum}_{player}"
 
         # inningの計算（特殊処理）
         inning_cell = tds[3] if len(tds) > 3 else None
@@ -124,6 +136,7 @@ def scrape_game_pitcher_stats(url, team_name, player_lookup=None):
         row = {
             'key': row_key,
             'team': team,
+            'url': url,
             'date': date,
             'start_time': start_time,
             'player_number': pnum,
@@ -220,7 +233,7 @@ def save_to_csv(rows, output_dir='output'):
     filepath = os.path.join(output_dir, filename)
 
     fieldnames = [
-        'key', 'team', 'date', 'start_time',
+        'key', 'team', 'url', 'date', 'start_time',
         'player_number', 'player', 'result', 'inning',
         'pitches', 'runs_allowed', 'earned_runs',
         'complete_game', 'shotout', 'hits_allowed', 'hr_allowed',

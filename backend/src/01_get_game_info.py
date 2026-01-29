@@ -200,8 +200,20 @@ def scrape_game_detail(url, team_name, player_lookup=None, teams_info=None):
         elif team_name_value == bottom_team:
             top_or_bottom = "bottom"
     
-    # key: ${team}_${date}_${start_time}_${top_or_bottom}
-    key = f"{team_name or ''}_{date or ''}_{start_time or ''}_{top_or_bottom or ''}"
+    # key: ${team}_${date}_${start_time}_${game_id}
+    # game_id: urlを'/'で分割したときに'game'の次の要素
+    game_id = ""
+    if url:
+        try:
+            parts = url.split("/")
+            if "game" in parts:
+                idx = parts.index("game")
+                if idx + 1 < len(parts):
+                    game_id = parts[idx + 1]
+        except Exception:
+            game_id = ""
+
+    key = f"{team_name or ''}_{date or ''}_{start_time or ''}_{game_id or ''}"
     
     return {
         'key': key,
