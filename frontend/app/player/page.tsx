@@ -121,6 +121,15 @@ export default function PlayersPage() {
     return players.filter((player) => player.team === selectedTeam);
   }, [players, selectedTeam]);
 
+  // チーム未選択時: チームごとに選手をグループ化（teamList の順）
+  const playersByTeam = useMemo(() => {
+    const map = new Map<string, Player[]>();
+    teamList.forEach(({ key }) => {
+      map.set(key, players.filter((p) => p.team === key));
+    });
+    return map;
+  }, [players, teamList]);
+
   // 選択されたチーム名を取得
   const selectedTeamName = useMemo(() => {
     if (!selectedTeam) return null;
@@ -168,11 +177,88 @@ export default function PlayersPage() {
       }
     >
       {!selectedTeam ? (
-        <div className="text-center py-12 text-base text-muted-foreground">
-          チームを選択してください
+        <div className="space-y-6">
+          {teamList.map(({ key: teamKey, name: teamName }) => {
+            const teamPlayers = playersByTeam.get(teamKey) ?? [];
+            return (
+              <section key={teamKey} className="space-y-4">
+                <div
+                  className="flex items-center justify-between gap-4 px-4 py-2 rounded-md"
+                  style={{ backgroundColor: "#333333", color: "white" }}
+                >
+                  <h2 className="text-lg font-semibold">
+                    {getDisplayTeamName(teamName, teamKey)}
+                  </h2>
+                  <Link
+                    href={`/team/${teamKey}`}
+                    className="text-white text-sm font-medium whitespace-nowrap cursor-pointer hover:underline underline-offset-2 transition-all"
+                  >
+                    チームを詳しく見る
+                  </Link>
+                </div>
+                {teamPlayers.length === 0 ? (
+                  <div className="text-sm text-muted-foreground py-2">
+                    所属選手はいません
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {teamPlayers.map((player) => {
+                      const playerHref =
+                        player.team && player.player_number != null
+                          ? `/player/${player.team}_${player.player_number}`
+                          : null;
+
+                      const content = (
+                        <Card className="hover:bg-muted/50 transition-colors">
+                          <CardContent className="px-6">
+                            <div className="flex items-center gap-6">
+                              <div className="min-w-10">
+                                <p className="text-3xl font-bold">
+                                  {player.player_number != null ? `${player.player_number}` : "—"}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-xl font-medium">
+                                  {player.player_name || player.nickname || "—"}
+                                </p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+
+                      return playerHref ? (
+                        <Link key={player.key} href={playerHref}>
+                          {content}
+                        </Link>
+                      ) : (
+                        <div key={player.key}>{content}</div>
+                      );
+                    })}
+                  </div>
+                )}
+              </section>
+            );
+          })}
         </div>
       ) : (
         <div className="space-y-4">
+          <div
+            className="flex items-center justify-between gap-4 px-4 py-2 rounded-md"
+            style={{ backgroundColor: "#333333", color: "white" }}
+          >
+            <h2 className="text-lg font-semibold">
+              {selectedTeamName != null
+                ? getDisplayTeamName(selectedTeamName, selectedTeam)
+                : selectedTeam ?? "—"}
+            </h2>
+            <Link
+              href={`/team/${selectedTeam}`}
+              className="text-white text-sm font-medium whitespace-nowrap cursor-pointer hover:underline underline-offset-2 transition-all"
+            >
+              チームを詳しく見る
+            </Link>
+          </div>
           {filteredPlayers.length === 0 ? (
             <div className="text-center py-12 text-base text-muted-foreground">
               選手が見つかりませんでした
@@ -182,7 +268,7 @@ export default function PlayersPage() {
               {filteredPlayers.map((player) => {
                 const playerHref =
                   player.team && player.player_number != null
-                    ? `/player/${player.team}/${player.player_number}`
+                    ? `/player/${player.team}_${player.player_number}`
                     : null;
 
                 const content = (
@@ -196,7 +282,7 @@ export default function PlayersPage() {
                         </div>
                         <div>
                           <p className="text-xl font-medium">
-                            {player.player_name || player.nickname ||　"—"}
+                            {player.player_name || player.nickname || "—"}
                           </p>
                         </div>
                       </div>

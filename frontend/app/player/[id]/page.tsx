@@ -18,7 +18,17 @@ import type {
   SeasonPitcherStats,
 } from "@/lib/statsTypes";
 
-type Props = { params: Promise<{ team: string; player_number: string }> };
+/** URL id (team_player_number) から team と player_number を解析 */
+function parsePlayerId(id: string): { team: string; player_number: string } | null {
+  const lastUnderscore = id.lastIndexOf("_");
+  if (lastUnderscore <= 0) return null;
+  return {
+    team: id.slice(0, lastUnderscore),
+    player_number: id.slice(lastUnderscore + 1),
+  };
+}
+
+type Props = { params: Promise<{ id: string }> };
 
 export default function PlayerDetailPage({ params }: Props) {
   const router = useRouter();
@@ -48,8 +58,17 @@ export default function PlayerDetailPage({ params }: Props) {
 
   useEffect(() => {
     params.then((resolvedParams) => {
-      setTeam(resolvedParams.team);
-      setPlayerNumber(resolvedParams.player_number);
+      const parsed = parsePlayerId(resolvedParams.id);
+      if (parsed) {
+        setTeam(parsed.team);
+        setPlayerNumber(parsed.player_number);
+        setError(null);
+      } else {
+        setTeam("");
+        setPlayerNumber("");
+        setError("無効なURLです");
+        setLoading(false);
+      }
     });
   }, [params]);
 
