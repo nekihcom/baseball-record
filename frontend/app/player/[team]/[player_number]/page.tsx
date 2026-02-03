@@ -11,7 +11,9 @@ import type {
   CareerHitterRow,
   CareerPitcherRow,
   RecentGameHitterRow,
+  RecentGameHitterRowWithPlace,
   RecentGamePitcherRow,
+  RecentGamePitcherRowWithPlace,
   SeasonHitterStats,
   SeasonPitcherStats,
 } from "@/lib/statsTypes";
@@ -30,7 +32,17 @@ export default function PlayerDetailPage({ params }: Props) {
   const [careerHitterStats, setCareerHitterStats] = useState<CareerHitterRow[] | null>(null);
   const [careerPitcherStats, setCareerPitcherStats] = useState<CareerPitcherRow[] | null>(null);
   const [recentGamesHitterStats, setRecentGamesHitterStats] = useState<RecentGameHitterRow[] | null>(null);
+  const [recentGamesHitterStatsWithPlace, setRecentGamesHitterStatsWithPlace] =
+    useState<RecentGameHitterRowWithPlace[] | null>(null);
   const [recentGamesPitcherStats, setRecentGamesPitcherStats] = useState<RecentGamePitcherRow[] | null>(null);
+  const [recentGamesPitcherStatsWithPlace, setRecentGamesPitcherStatsWithPlace] =
+    useState<RecentGamePitcherRowWithPlace[] | null>(null);
+  const [careerGamesHitterStats, setCareerGamesHitterStats] = useState<RecentGameHitterRow[] | null>(null);
+  const [careerGamesHitterStatsWithPlace, setCareerGamesHitterStatsWithPlace] =
+    useState<RecentGameHitterRowWithPlace[] | null>(null);
+  const [careerGamesPitcherStats, setCareerGamesPitcherStats] = useState<RecentGamePitcherRow[] | null>(null);
+  const [careerGamesPitcherStatsWithPlace, setCareerGamesPitcherStatsWithPlace] =
+    useState<RecentGamePitcherRowWithPlace[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -48,6 +60,20 @@ export default function PlayerDetailPage({ params }: Props) {
       try {
         setLoading(true);
         setError(null);
+        setHasCurrentYearPitcherStats(false);
+        setHasCareerPitcherStats(false);
+        setCurrentYearHitterStats(null);
+        setCurrentYearPitcherStats(null);
+        setCareerHitterStats(null);
+        setCareerPitcherStats(null);
+        setRecentGamesHitterStats(null);
+        setRecentGamesHitterStatsWithPlace(null);
+        setRecentGamesPitcherStats(null);
+        setRecentGamesPitcherStatsWithPlace(null);
+        setCareerGamesHitterStats(null);
+        setCareerGamesHitterStatsWithPlace(null);
+        setCareerGamesPitcherStats(null);
+        setCareerGamesPitcherStatsWithPlace(null);
 
         const playerNumberInt = parseInt(playerNumber, 10);
         if (isNaN(playerNumberInt)) {
@@ -82,7 +108,11 @@ export default function PlayerDetailPage({ params }: Props) {
           { data: hitterStats, error: hitterError },
           { data: pitcherStats, error: pitcherError },
           { data: recentGamesData, error: recentGamesError },
+          { data: gameInfoData, error: gameInfoError },
           { data: recentGamesPitcherData, error: recentGamesPitcherError },
+          { data: careerGameHitterData, error: careerGameHitterError },
+          { data: careerGameInfoData, error: careerGameInfoError },
+          { data: careerGamePitcherData, error: careerGamePitcherError },
         ] = await Promise.all([
           supabase
             .from("transaction_hitter_stats")
@@ -130,7 +160,7 @@ export default function PlayerDetailPage({ params }: Props) {
           supabase
             .from("transaction_game_hitter_stats")
             .select(
-              "date,order,position,plate_apperance,at_bat,hit,hr,rbi,stolen_base,at_bat_in_scoring,hit_in_scoring"
+              "date,start_time,url,order,position,plate_apperance,at_bat,hit,hr,rbi,stolen_base,at_bat_in_scoring,hit_in_scoring"
             )
             .eq("team", team)
             .eq("player", playerName)
@@ -139,42 +169,85 @@ export default function PlayerDetailPage({ params }: Props) {
             .order("date", { ascending: false })
             .order("start_time", { ascending: false }),
           supabase
+            .from("transaction_game_info")
+            .select("url,place")
+            .eq("team", team)
+            .eq("delete_flg", 0)
+            .like("date", `${currentYear}%`),
+          supabase
             .from("transaction_game_pitcher_stats")
             .select(
-              "date,order,result,inning,runs_allowed,earned_runs,hits_allowed,strikeouts,walks_allowed,hit_batsmen"
+              "date,start_time,url,order,result,inning,runs_allowed,earned_runs,hits_allowed,strikeouts,walks_allowed,hit_batsmen"
             )
             .eq("team", team)
             .eq("player", playerName)
             .eq("delete_flg", 0)
             .like("date", `${currentYear}%`)
             .order("date", { ascending: false })
-            .order("start_time", { ascending: false })
-            .limit(3),
+            .order("start_time", { ascending: false }),
+          supabase
+            .from("transaction_game_hitter_stats")
+            .select(
+              "date,start_time,url,order,position,plate_apperance,at_bat,hit,hr,rbi,stolen_base,at_bat_in_scoring,hit_in_scoring"
+            )
+            .eq("team", team)
+            .eq("player", playerName)
+            .eq("delete_flg", 0)
+            .order("date", { ascending: false })
+            .order("start_time", { ascending: false }),
+          supabase
+            .from("transaction_game_info")
+            .select("url,place")
+            .eq("team", team)
+            .eq("delete_flg", 0),
+          supabase
+            .from("transaction_game_pitcher_stats")
+            .select(
+              "date,start_time,url,order,result,inning,runs_allowed,earned_runs,hits_allowed,strikeouts,walks_allowed,hit_batsmen"
+            )
+            .eq("team", team)
+            .eq("player", playerName)
+            .eq("delete_flg", 0)
+            .order("date", { ascending: false })
+            .order("start_time", { ascending: false }),
         ]);
 
+        // PGRST116 = 行が0件（.single()で該当なし）。成績なしは想定内のためエラーログは出さない
         if (currentYearHitterError) {
-          console.error("今シーズンの打者成績の取得に失敗しました:", currentYearHitterError);
+          if (currentYearHitterError.code !== "PGRST116") {
+            console.error("今シーズンの打者成績の取得に失敗しました:", currentYearHitterError);
+          }
         } else if (currentYearHitterData) {
           setCurrentYearHitterStats(currentYearHitterData as SeasonHitterStats);
         }
 
         if (currentPitcherError) {
-          console.error("今シーズンの投手成績の取得に失敗しました:", currentPitcherError);
-        } else {
-          if (currentYearPitcherData) {
-            setHasCurrentYearPitcherStats(true);
-            setCurrentYearPitcherStats(currentYearPitcherData as SeasonPitcherStats);
-          } else {
-            setHasCurrentYearPitcherStats(false);
+          if (currentPitcherError.code !== "PGRST116") {
+            console.error("今シーズンの投手成績の取得に失敗しました:", currentPitcherError);
           }
+          setHasCurrentYearPitcherStats(false);
+          setCurrentYearPitcherStats(null);
+        } else if (currentYearPitcherData) {
+          setHasCurrentYearPitcherStats(true);
+          setCurrentYearPitcherStats(currentYearPitcherData as SeasonPitcherStats);
+        } else {
+          setHasCurrentYearPitcherStats(false);
+          setCurrentYearPitcherStats(null);
         }
 
         if (careerPitcherError) {
-          console.error("通算投手成績の取得に失敗しました:", careerPitcherError);
+          if (careerPitcherError.code !== "PGRST116") {
+            console.error("通算投手成績の取得に失敗しました:", careerPitcherError);
+          }
+          setHasCareerPitcherStats(false);
+          setCareerPitcherStats(null);
         } else {
-          setHasCareerPitcherStats(
-            Array.isArray(careerPitcherSummary) && careerPitcherSummary.length > 0
-          );
+          const hasCareerPitcher =
+            Array.isArray(careerPitcherSummary) && careerPitcherSummary.length > 0;
+          setHasCareerPitcherStats(hasCareerPitcher);
+          if (!hasCareerPitcher) {
+            setCareerPitcherStats(null);
+          }
         }
 
         if (hitterError) {
@@ -189,16 +262,121 @@ export default function PlayerDetailPage({ params }: Props) {
           setCareerPitcherStats(pitcherStats as CareerPitcherRow[]);
         }
 
+        const placeByUrl = new Map<string, string | null>();
+        if (!gameInfoError && Array.isArray(gameInfoData)) {
+          for (const row of gameInfoData as { url: string | null; place: string | null }[]) {
+            placeByUrl.set(row.url ?? "", row.place ?? null);
+          }
+        }
+
         if (recentGamesError) {
           console.error("直近3試合の打者成績の取得に失敗しました:", recentGamesError);
-        } else if (Array.isArray(recentGamesData) && recentGamesData.length > 0) {
-          setRecentGamesHitterStats(recentGamesData as RecentGameHitterRow[]);
+        } else if (Array.isArray(recentGamesData)) {
+          const hitterRows = recentGamesData as (RecentGameHitterRow & {
+            date: string | null;
+            start_time: string | null;
+            url: string | null;
+          })[];
+          setRecentGamesHitterStats(hitterRows);
+
+          const withPlace: RecentGameHitterRowWithPlace[] = hitterRows.map((row) => ({
+            date: row.date,
+            order: row.order,
+            position: row.position,
+            plate_apperance: row.plate_apperance,
+            at_bat: row.at_bat,
+            hit: row.hit,
+            hr: row.hr,
+            rbi: row.rbi,
+            stolen_base: row.stolen_base,
+            at_bat_in_scoring: row.at_bat_in_scoring,
+            hit_in_scoring: row.hit_in_scoring,
+            place: placeByUrl.get(row.url ?? "") ?? null,
+          }));
+          setRecentGamesHitterStatsWithPlace(withPlace);
         }
 
         if (recentGamesPitcherError) {
           console.error("直近3試合の投手成績の取得に失敗しました:", recentGamesPitcherError);
-        } else if (Array.isArray(recentGamesPitcherData) && recentGamesPitcherData.length > 0) {
-          setRecentGamesPitcherStats(recentGamesPitcherData as RecentGamePitcherRow[]);
+        } else if (Array.isArray(recentGamesPitcherData)) {
+          const pitcherRows = recentGamesPitcherData as (RecentGamePitcherRow & {
+            date: string | null;
+            start_time: string | null;
+            url: string | null;
+          })[];
+          setRecentGamesPitcherStats(pitcherRows);
+          const withPlace: RecentGamePitcherRowWithPlace[] = pitcherRows.map((row) => ({
+            date: row.date,
+            order: row.order,
+            result: row.result,
+            inning: row.inning,
+            runs_allowed: row.runs_allowed,
+            earned_runs: row.earned_runs,
+            hits_allowed: row.hits_allowed,
+            strikeouts: row.strikeouts,
+            walks_allowed: row.walks_allowed,
+            hit_batsmen: row.hit_batsmen,
+            place: placeByUrl.get(row.url ?? "") ?? null,
+          }));
+          setRecentGamesPitcherStatsWithPlace(withPlace);
+        }
+
+        const careerPlaceByUrl = new Map<string, string | null>();
+        if (!careerGameInfoError && Array.isArray(careerGameInfoData)) {
+          for (const row of careerGameInfoData as { url: string | null; place: string | null }[]) {
+            careerPlaceByUrl.set(row.url ?? "", row.place ?? null);
+          }
+        }
+
+        if (careerGameHitterError) {
+          console.error("通算試合別打者成績の取得に失敗しました:", careerGameHitterError);
+        } else if (Array.isArray(careerGameHitterData)) {
+          const careerHitterRows = careerGameHitterData as (RecentGameHitterRow & {
+            date: string | null;
+            start_time: string | null;
+            url: string | null;
+          })[];
+          setCareerGamesHitterStats(careerHitterRows);
+          const careerWithPlace: RecentGameHitterRowWithPlace[] = careerHitterRows.map((row) => ({
+            date: row.date,
+            order: row.order,
+            position: row.position,
+            plate_apperance: row.plate_apperance,
+            at_bat: row.at_bat,
+            hit: row.hit,
+            hr: row.hr,
+            rbi: row.rbi,
+            stolen_base: row.stolen_base,
+            at_bat_in_scoring: row.at_bat_in_scoring,
+            hit_in_scoring: row.hit_in_scoring,
+            place: careerPlaceByUrl.get(row.url ?? "") ?? null,
+          }));
+          setCareerGamesHitterStatsWithPlace(careerWithPlace);
+        }
+
+        if (careerGamePitcherError) {
+          console.error("通算試合別投手成績の取得に失敗しました:", careerGamePitcherError);
+        } else if (Array.isArray(careerGamePitcherData)) {
+          const careerPitcherRows = careerGamePitcherData as (RecentGamePitcherRow & {
+            date: string | null;
+            start_time: string | null;
+            url: string | null;
+          })[];
+          setCareerGamesPitcherStats(careerPitcherRows);
+          const careerPitcherWithPlace: RecentGamePitcherRowWithPlace[] = careerPitcherRows.map((row) => ({
+            date: row.date,
+            order: row.order,
+            result: row.result,
+            inning: row.inning,
+            runs_allowed: row.runs_allowed,
+            earned_runs: row.earned_runs,
+            hits_allowed: row.hits_allowed,
+            strikeouts: row.strikeouts,
+            walks_allowed: row.walks_allowed,
+            hit_batsmen: row.hit_batsmen,
+            place: careerPlaceByUrl.get(row.url ?? "") ?? null,
+          }));
+          setCareerGamesPitcherStatsWithPlace(careerPitcherWithPlace);
         }
       } catch (e) {
         setError(e instanceof Error ? e.message : "データの取得に失敗しました");
@@ -309,7 +487,13 @@ export default function PlayerDetailPage({ params }: Props) {
             careerPitcherStats={careerPitcherStats}
             hasCareerPitcherStats={hasCareerPitcherStats}
             recentGamesHitterStats={recentGamesHitterStats}
+            recentGamesHitterStatsWithPlace={recentGamesHitterStatsWithPlace}
             recentGamesPitcherStats={recentGamesPitcherStats}
+            recentGamesPitcherStatsWithPlace={recentGamesPitcherStatsWithPlace}
+            careerGamesHitterStats={careerGamesHitterStats}
+            careerGamesHitterStatsWithPlace={careerGamesHitterStatsWithPlace}
+            careerGamesPitcherStats={careerGamesPitcherStats}
+            careerGamesPitcherStatsWithPlace={careerGamesPitcherStatsWithPlace}
           />
         </CardContent>
       </Card>

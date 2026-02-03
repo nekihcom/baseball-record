@@ -107,6 +107,11 @@ export type RecentGameHitterRow = Pick<
   | "hit_in_scoring"
 >;
 
+// グラウンド別成績用（place は transaction_game_info 結合で取得）
+export type RecentGameHitterRowWithPlace = RecentGameHitterRow & {
+  place: string | null;
+};
+
 // 試合別投手成績（直近3試合用）
 export type RecentGamePitcherRow = Pick<
   GamePitcherStats,
@@ -122,3 +127,7 @@ export type RecentGamePitcherRow = Pick<
   | "hit_batsmen"
 >;
 
+// グラウンド別成績用（place は transaction_game_info 結合で取得）
+export type RecentGamePitcherRowWithPlace = RecentGamePitcherRow & {
+  place: string | null;
+};
