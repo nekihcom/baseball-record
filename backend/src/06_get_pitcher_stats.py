@@ -169,7 +169,8 @@ def scrape_pitcher_stats(team_name, year, player_lookup=None):
     if player_lookup is None:
         player_lookup = {}
     
-    url = f"https://teams.one/teams/{team_name}/stats/pitchers_table?search_result%5Bgame_date%5D={year}&search_result%5Bgame_type%5D=&search_result%5Bopponent_team_name%5D=&search_result%5Btournament_name%5D=&search_result%5Bis_walk_game%5D=&search_result%5Bunreached%5D="
+    # url = f"https://teams.one/teams/{team_name}/stats/pitchers_table?search_result%5Bgame_date%5D={year}&search_result%5Bgame_type%5D=&search_result%5Bopponent_team_name%5D=&search_result%5Btournament_name%5D=&search_result%5Bis_walk_game%5D=&search_result%5Bunreached%5D=true"
+    url = f"https://teams.one/teams/{team_name}/stats/pitchers_table?search_result%5Bgame_date%5D={year}&search_result%5Bgame_type%5D=&search_result%5Bopponent_team_name%5D=&search_result%5Btournament_name%5D=&search_result%5Bis_walk_game%5D=&search_result%5Bunreached%5D=&search_result%5Bunreached%5D=true"
     print(f"  {year}年の投手成績を取得中: {url}")
     
     html = get_html(url)

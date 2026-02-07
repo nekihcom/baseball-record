@@ -71,7 +71,7 @@ export function PitcherStatsTable({ stats, emptyMessage = "投手成績はあり
                 {row.innings_pitched ?? "—"}
               </td>
               <td className="px-2 py-1 text-right whitespace-nowrap">
-                {row.pitches_thrown ?? "—"}
+                {row.pitches_thrown ?? 0}
               </td>
               <td className="px-2 py-1 text-right whitespace-nowrap">
                 {row.runs_allowed ?? "—"}
@@ -80,7 +80,7 @@ export function PitcherStatsTable({ stats, emptyMessage = "投手成績はあり
                 {row.earned_runs_allowed ?? "—"}
               </td>
               <td className="px-2 py-1 text-right whitespace-nowrap">
-                {row.home_runs_allowed ?? "—"}
+                {row.home_runs_allowed ?? 0}
               </td>
               <td className="px-2 py-1 text-right whitespace-nowrap">
                 {row.strikeouts ?? "—"}

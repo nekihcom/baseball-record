@@ -28,6 +28,118 @@ function parsePlayerId(id: string): { team: string; player_number: string } | nu
   };
 }
 
+/** 投球回表記 "6回1/3" を小数に変換 */
+function parseInningToDecimal(inning: string | null): number {
+  if (!inning || typeof inning !== "string") return 0;
+  const match = inning.match(/^(\d+)回(?:(\d+)\/(\d+))?$/);
+  if (!match) return 0;
+  const full = parseInt(match[1], 10) || 0;
+  const num = match[2] ? parseInt(match[2], 10) || 0 : 0;
+  const denom = match[3] ? parseInt(match[3], 10) || 1 : 1;
+  return full + num / denom;
+}
+
+type GamePitcherRowForAgg = {
+  date: string | null;
+  result: string | null;
+  inning: string | null;
+  runs_allowed: number | null;
+  earned_runs: number | null;
+  hits_allowed: number | null;
+  strikeouts: number | null;
+  walks_allowed: number | null;
+  hit_batsmen: number | null;
+};
+
+/** 試合別投手成績を年度別に集計して CareerPitcherRow の配列を返す */
+function aggregateGamePitcherStatsByYear(
+  games: GamePitcherRowForAgg[]
+): CareerPitcherRow[] {
+  const byYear = new Map<
+    number,
+    {
+      games_played: number;
+      wins: number;
+      losses: number;
+      holds: number;
+      saves: number;
+      runs_allowed: number;
+      earned_runs_allowed: number;
+      hits_allowed: number;
+      strikeouts: number;
+      walks_allowed: number;
+      hit_batsmen: number;
+      inningsDecimal: number;
+    }
+  >();
+  for (const row of games) {
+    const yearStr = row.date?.slice(0, 4);
+    const year = yearStr ? parseInt(yearStr, 10) : null;
+    if (year == null || isNaN(year)) continue;
+    const cur = byYear.get(year) ?? {
+      games_played: 0,
+      wins: 0,
+      losses: 0,
+      holds: 0,
+      saves: 0,
+      runs_allowed: 0,
+      earned_runs_allowed: 0,
+      hits_allowed: 0,
+      strikeouts: 0,
+      walks_allowed: 0,
+      hit_batsmen: 0,
+      inningsDecimal: 0,
+    };
+    cur.games_played += 1;
+    const result = (row.result ?? "").trim();
+    if (result === "勝") cur.wins += 1;
+    else if (result === "敗") cur.losses += 1;
+    else if (result === "H") cur.holds += 1;
+    else if (result === "S") cur.saves += 1;
+    cur.runs_allowed += row.runs_allowed ?? 0;
+    cur.earned_runs_allowed += row.earned_runs ?? 0;
+    cur.hits_allowed += row.hits_allowed ?? 0;
+    cur.strikeouts += row.strikeouts ?? 0;
+    cur.walks_allowed += row.walks_allowed ?? 0;
+    cur.hit_batsmen += row.hit_batsmen ?? 0;
+    cur.inningsDecimal += parseInningToDecimal(row.inning);
+    byYear.set(year, cur);
+  }
+  const rows: CareerPitcherRow[] = [];
+  for (const [year, cur] of byYear.entries()) {
+    const innings = cur.inningsDecimal;
+    const winPct =
+      cur.wins + cur.losses > 0
+        ? cur.wins / (cur.wins + cur.losses)
+        : null;
+    const era = innings > 0 ? (cur.earned_runs_allowed * 9) / innings : null;
+    const whip =
+      innings > 0
+        ? (cur.hits_allowed + cur.walks_allowed) / innings
+        : null;
+    rows.push({
+      year,
+      games_played: cur.games_played,
+      wins: cur.wins,
+      losses: cur.losses,
+      holds: cur.holds,
+      saves: cur.saves,
+      win_percentage: winPct,
+      era: era != null ? Math.round(era * 100) / 100 : null,
+      innings_pitched:
+        innings > 0 ? innings.toFixed(2) : "0",
+      pitches_thrown: null,
+      runs_allowed: cur.runs_allowed,
+      earned_runs_allowed: cur.earned_runs_allowed,
+      strikeouts: cur.strikeouts,
+      walks_allowed: cur.walks_allowed,
+      home_runs_allowed: null,
+      whip: whip != null ? Math.round(whip * 1000) / 1000 : null,
+    });
+  }
+  return rows;
+}
+
 type Props = { params: Promise<{ id: string }> };
 
 export default function PlayerDetailPage({ params }: Props) {
@@ -277,8 +389,26 @@ export default function PlayerDetailPage({ params }: Props) {
 
         if (pitcherError) {
           console.error("通算投手成績の取得に失敗しました:", pitcherError);
-        } else if (Array.isArray(pitcherStats) && pitcherStats.length > 0) {
-          setCareerPitcherStats(pitcherStats as CareerPitcherRow[]);
+        }
+        const fromDb = Array.isArray(pitcherStats) && pitcherStats.length > 0
+          ? (pitcherStats as CareerPitcherRow[])
+          : [];
+        const dbYears = new Set(fromDb.map((r) => r.year));
+        const gameRows = Array.isArray(careerGamePitcherData)
+          ? (careerGamePitcherData as GamePitcherRowForAgg[])
+          : [];
+        const fromGames = aggregateGamePitcherStatsByYear(gameRows);
+        const missingYears = fromGames.filter((r) => r.year != null && !dbYears.has(r.year));
+        const merged =
+          missingYears.length > 0
+            ? [...fromDb, ...missingYears].sort((a, b) => (b.year ?? 0) - (a.year ?? 0))
+            : fromDb;
+        if (merged.length > 0) {
+          setCareerPitcherStats(merged);
+          setHasCareerPitcherStats(true);
+        } else if (fromDb.length > 0) {
+          setCareerPitcherStats(fromDb);
+          setHasCareerPitcherStats(true);
         }
 
         const placeByUrl = new Map<string, string | null>();
