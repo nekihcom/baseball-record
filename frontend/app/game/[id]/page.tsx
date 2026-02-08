@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Game, GameHitterStats, GamePitcherStats } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { getDisplayTeamName } from "@/lib/utils";
 
 type Props = { params: Promise<{ id: string }> };
@@ -244,43 +245,48 @@ export default function GameDetailPage({ params }: Props) {
       
       <Card className="border-none shadow-none py-0">
         <CardContent className="px-0">
-          <div className="overflow-x-auto border-l border-gray-300">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr>
-                  <th className="sticky left-0 z-10 border border-gray-300 border-l-0 px-4 py-2 text-left font-medium text-white" style={{ backgroundColor: '#333333', boxShadow: '2px 0 0 0 rgb(209, 213, 219)' }}>チーム</th>
+          <div className="w-full overflow-x-auto">
+            <table className="min-w-max text-sm border-collapse">
+              <thead className="bg-[#333333] text-white">
+                <tr className="border-b">
+                  <th className="sticky left-0 z-10 bg-[#333333] px-2 py-1 text-left font-semibold whitespace-nowrap">
+                    チーム
+                  </th>
                   {[1, 2, 3, 4, 5, 6, 7].map((inning) => (
-                    <th key={inning} className="border border-gray-300 px-2 py-2 text-center font-medium min-w-[40px] text-white" style={{ backgroundColor: '#333333' }}>
+                    <th
+                      key={inning}
+                      className="px-2 py-1 text-center font-semibold whitespace-nowrap min-w-[40px]"
+                    >
                       {inning}
                     </th>
                   ))}
-                  <th className="border border-gray-300 px-4 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333' }}>計</th>
+                  <th className="px-2 py-1 text-center font-semibold whitespace-nowrap">計</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="sticky left-0 z-10 border border-gray-300 border-l-0 px-4 py-2 font-medium whitespace-nowrap bg-background" style={{ boxShadow: '2px 0 0 0 rgb(209, 213, 219)' }}>
+                <tr className="border-b">
+                  <td className="sticky left-0 z-10 bg-background px-2 py-1 font-medium whitespace-nowrap">
                     {getDisplayTeamName(game.top_team, null)}
                   </td>
                   {topInningScores.map((score, index) => (
-                    <td key={index} className="border border-gray-300 px-2 py-2 text-center">
+                    <td key={index} className="px-2 py-1 text-center whitespace-nowrap">
                       {score !== null ? score : ""}
                     </td>
                   ))}
-                  <td className="border border-gray-300 px-4 py-2 text-center font-medium">
+                  <td className="px-2 py-1 text-center font-medium whitespace-nowrap">
                     {game.top_team_score !== null ? game.top_team_score : "—"}
                   </td>
                 </tr>
-                <tr>
-                  <td className="sticky left-0 z-10 border border-gray-300 border-l-0 px-4 py-2 font-medium whitespace-nowrap bg-background" style={{ boxShadow: '2px 0 0 0 rgb(209, 213, 219)' }}>
+                <tr className="border-b last:border-b-0">
+                  <td className="sticky left-0 z-10 bg-background px-2 py-1 font-medium whitespace-nowrap">
                     {getDisplayTeamName(game.bottom_team, null)}
                   </td>
                   {bottomInningScores.map((score, index) => (
-                    <td key={index} className="border border-gray-300 px-2 py-2 text-center">
+                    <td key={index} className="px-2 py-1 text-center whitespace-nowrap">
                       {score !== null ? score : ""}
                     </td>
                   ))}
-                  <td className="border border-gray-300 px-4 py-2 text-center font-medium">
+                  <td className="px-2 py-1 text-center font-medium whitespace-nowrap">
                     {game.bottom_team_score !== null ? game.bottom_team_score : "—"}
                   </td>
                 </tr>
@@ -296,25 +302,25 @@ export default function GameDetailPage({ params }: Props) {
             <table className="w-full border-collapse">
               <tbody>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 text-center font-medium w-16 text-white" style={{ backgroundColor: '#333333' }}>勝</td>
+                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold" style={{ backgroundColor: '#333333' }}>勝</td>
                   <td className="border border-gray-300 px-4 py-2">
                     {cleanPitcherName(game.win_pitcher) || ""}
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 text-center font-medium w-16 text-white" style={{ backgroundColor: '#333333' }}>負</td>
+                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold" style={{ backgroundColor: '#333333' }}>負</td>
                   <td className="border border-gray-300 px-4 py-2">
                     {cleanPitcherName(game.lose_pitcher) || ""}
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 text-center font-medium w-16 text-white" style={{ backgroundColor: '#333333' }}>S</td>
+                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold" style={{ backgroundColor: '#333333' }}>S</td>
                   <td className="border border-gray-300 px-4 py-2">
                     {/* セーブ投手のデータは現在利用不可 */}
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 text-center font-medium w-16 text-white" style={{ backgroundColor: '#333333' }}>HR</td>
+                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold" style={{ backgroundColor: '#333333' }}>HR</td>
                   <td className="border border-gray-300 px-4 py-2">
                     {game.hr_player || ""}
                   </td>
@@ -328,194 +334,147 @@ export default function GameDetailPage({ params }: Props) {
       {/* 打者成績・投手成績 */}
       <Card className="border-none shadow-none py-0">
         <CardContent className="px-0">
-          {/* タブ切り替え */}
-          <div className="flex gap-0 mb-4">
-            <button
-              onClick={() => setStatsType("hitter")}
-              className={`flex-1 px-6 py-3 text-lg font-medium text-white transition-colors ${
-                statsType === "hitter"
-                  ? "bg-[#333333]"
-                  : "bg-[#666666] opacity-80 hover:opacity-100"
-              }`}
-            >
-              打者成績
-            </button>
-            <button
-              onClick={() => setStatsType("pitcher")}
-              className={`flex-1 px-6 py-3 text-lg font-medium text-white transition-colors ${
-                statsType === "pitcher"
-                  ? "bg-[#333333]"
-                  : "bg-[#666666] opacity-80 hover:opacity-100"
-              }`}
-            >
-              投手成績
-            </button>
-          </div>
+          <Tabs value={statsType} onValueChange={(v) => setStatsType(v as "hitter" | "pitcher")} className="w-full">
+            <TabsList className="w-full">
+              <TabsTrigger value="hitter" className="flex-1">
+                打者成績
+              </TabsTrigger>
+              <TabsTrigger value="pitcher" className="flex-1">
+                投手成績
+              </TabsTrigger>
+            </TabsList>
 
           {statsLoading ? (
-            <div className="flex items-center justify-center min-h-[200px]">
+            <div className="flex items-center justify-center min-h-[200px] mt-4">
               <div className="flex flex-col items-center gap-4">
                 <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
                 <p className="text-sm text-muted-foreground">読み込み中...</p>
               </div>
             </div>
           ) : statsType === "hitter" ? (
-            <div className="overflow-x-auto border-l border-gray-300">
-              <table className="w-full border-separate border-spacing-0" style={{ minWidth: '100%' }}>
-                <thead>
-                  <tr>
-                    <th className="sticky left-0 z-10 px-2 py-2 text-center font-medium text-white align-middle" style={{ backgroundColor: '#333333', boxShadow: '2px 0 0 0 rgb(209, 213, 219)' }}>守備</th>
-                    <th className="sticky left-[32.5px] z-10 px-4 py-2 text-center font-medium text-white whitespace-nowrap align-middle" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright', minWidth: '80px', boxShadow: '2px 0 0 0 rgb(209, 213, 219)' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>選手名</span>
+            <TabsContent value="hitter" className="mt-4">
+            <div className="w-full overflow-x-auto">
+              <table className="min-w-max text-sm border-collapse">
+                <thead className="bg-[#333333] text-white">
+                  <tr className="border-b">
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap align-middle" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>守備</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap align-middle min-w-[80px]" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>
+                      <span>選手名</span>
                     </th>
-                    <th className="px-2 pr-2 pl-3 text-center font-medium text-white" style={{ backgroundColor: '#333333' }}>打席</th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333' }}>打数</th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333' }}>安打</th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>本塁打</span>
-                    </th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333' }}>打点</th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333' }}>得点</th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333' }}>盗塁</th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>二塁打</span>
-                    </th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>三塁打</span>
-                    </th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>得点圏打数</span>
-                    </th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>得点圏安打</span>
-                    </th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333' }}>三振</th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333' }}>四球</th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333' }}>死球</th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333' }}>犠打</th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333' }}>犠飛</th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>併殺打</span>
-                    </th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333' }}>敵失</th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333' }}>失策</th>
-                    <th className="px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333' }}>盗塁<br />阻止</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>打席</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>打数</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>安打</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>本塁打</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>打点</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>得点</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>盗塁</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>二塁打</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>三塁打</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>得点圏打数</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>得点圏安打</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>三振</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>四球</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>死球</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>犠打</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>犠飛</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>併殺打</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>敵失</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>失策</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>盗塁阻止</th>
                   </tr>
                 </thead>
                 <tbody>
                   {hitterStats.length === 0 ? (
-                    <tr>
-                      <td colSpan={21} className="border-y border-l-0 border-r-0 border-gray-300 px-4 py-4 text-center text-muted-foreground">
+                    <tr className="border-b last:border-b-0">
+                      <td colSpan={21} className="px-2 py-1 text-center text-muted-foreground">
                         打者成績データがありません
                       </td>
                     </tr>
                   ) : (
                     hitterStats.map((stat) => (
-                      <tr key={stat.key}>
-                        <td className="sticky left-0 z-10 border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center bg-background whitespace-nowrap align-middle" style={{ boxShadow: '2px 0 0 0 rgb(209, 213, 219)' }}>{stat.position || "—"}</td>
-                        <td className="sticky left-[32.5px] z-10 border-y border-l-0 border-r-0 border-gray-300 px-4 py-2 text-center bg-background whitespace-nowrap align-middle" style={{ minWidth: '80px', boxShadow: '2px 0 0 0 rgb(209, 213, 219)' }}>{stat.player || "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.plate_apperance ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.at_bat ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.hit ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.hr ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.rbi ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.run ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.stolen_base ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.double ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.triple ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.at_bat_in_scoring ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.hit_in_scoring ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.strikeout ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.walk ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.hit_by_pitch ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.sacrifice_bunt ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.sacrifice_fly ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.double_play ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.oponent_error ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.own_error ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.caught_stealing ?? "—"}</td>
+                      <tr key={stat.key} className="border-b last:border-b-0">
+                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle">{stat.position || "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle min-w-[80px]">{stat.player || "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.plate_apperance ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.at_bat ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.hit ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.hr ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.rbi ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.run ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.stolen_base ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.double ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.triple ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.at_bat_in_scoring ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.hit_in_scoring ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.strikeout ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.walk ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.hit_by_pitch ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.sacrifice_bunt ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.sacrifice_fly ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.double_play ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.oponent_error ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.own_error ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.caught_stealing ?? "—"}</td>
                       </tr>
                     ))
                   )}
                 </tbody>
               </table>
             </div>
+            </TabsContent>
           ) : (
-            <div className="overflow-x-auto border-l border-gray-300">
-              <table className="w-full border-separate border-spacing-0" style={{ minWidth: '100%' }}>
-                <thead>
-                  <tr>
-                    <th className="sticky left-0 z-10 border-y border-l-0 border-r-0 border-gray-300 px-4 py-2 text-center font-medium text-white whitespace-nowrap align-middle" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright', boxShadow: '2px 0 0 0 rgb(209, 213, 219)', width:'20px' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>結果</span>
-                    </th>
-                    <th className="sticky left-[40px] z-10 border-y border-l-0 border-r-0 border-gray-300 px-4 py-2 text-center font-medium text-white whitespace-nowrap align-middle" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright', width: '100px', boxShadow: '2px 0 0 0 rgb(209, 213, 219)' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>選手名</span>
-                    </th>
-                    <th className="border-y border-l-0 border-r-0 border-gray-300 px-4 py-2 text-center font-medium text-white align-middle" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright', minWidth: '100px' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>投球回</span>
-                    </th>
-                    <th className="border-y border-l-0 border-r-0 border-gray-300 px-4 py-2 text-center font-medium text-white align-middle" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright', width: '20px' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>球数</span>
-                    </th>
-                    <th className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright', width: '20px' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>失点</span>
-                    </th>
-                    <th className="border-y border-l-0 border-r-0 border-gray-300 px-4 py-2 text-center font-medium text-white align-middle" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright', width: '20px' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>自責点</span>
-                    </th>
-                    <th className="border-y border-l-0 border-r-0 border-gray-300 px-4 py-2 text-center font-medium text-white align-middle" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright', width: '20px' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>被安打</span>
-                    </th>
-                    <th className="border-y border-l-0 border-r-0 border-gray-300 px-4 py-2 text-center font-medium text-white align-middle" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright', width: '20px' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>被本塁打</span>
-                    </th>
-                    <th className="border-y border-l-0 border-r-0 border-gray-300 px-4 py-2 text-center font-medium text-white align-middle" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright', width: '20px' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>奪三振</span>
-                    </th>
-                    <th className="border-y border-l-0 border-r-0 border-gray-300 px-4 py-2 text-center font-medium text-white align-middle" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright', width: '20px' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>与四球</span>
-                    </th>
-                    <th className="border-y border-l-0 border-r-0 border-gray-300 px-4 py-2 text-center font-medium text-white align-middle" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright', width: '20px' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>与死球</span>
-                    </th>
-                    <th className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright', width: '20px' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>ボーク</span>
-                    </th>
-                    <th className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center font-medium text-white" style={{ backgroundColor: '#333333', writingMode: 'vertical-lr', textOrientation: 'upright', width: '20px' }}>
-                      <span style={{ letterSpacing: '0.1em' }}>暴投</span>
-                    </th>
+            <TabsContent value="pitcher" className="mt-4">
+            <div className="w-full overflow-x-auto">
+              <table className="min-w-max text-sm border-collapse">
+                <thead className="bg-[#333333] text-white">
+                  <tr className="border-b">
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap align-middle w-10" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>結果</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap align-middle min-w-[100px]" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>選手名</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>投球回</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>球数</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>失点</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>自責点</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>被安打</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>被本塁打</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>奪三振</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>与四球</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>与死球</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>ボーク</th>
+                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>暴投</th>
                   </tr>
                 </thead>
                 <tbody>
                   {pitcherStats.length === 0 ? (
-                    <tr>
-                      <td colSpan={13} className="border-y border-l-0 border-r-0 border-gray-300 px-4 py-4 text-center text-muted-foreground">
+                    <tr className="border-b last:border-b-0">
+                      <td colSpan={13} className="px-2 py-1 text-center text-muted-foreground">
                         投手成績データがありません
                       </td>
                     </tr>
                   ) : (
                     pitcherStats.map((stat) => (
-                      <tr key={stat.key}>
-                        <td className="sticky left-0 z-10 border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center bg-background whitespace-nowrap align-middle" style={{ boxShadow: '2px 0 0 0 rgb(209, 213, 219)', width:'20px' }}>{stat.result == "-" ? "" : stat.result}</td>
-                        <td className="sticky left-[40px] z-10 border-y border-l-0 border-r-0 border-gray-300 px-4 py-2 text-center bg-background whitespace-nowrap align-middle" style={{ width: '100px', boxShadow: '2px 0 0 0 rgb(209, 213, 219)' }}>{stat.player || "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-4 py-2 text-center align-middle" style={{ width: '100px' }}>{stat.inning || "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.pitches ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.runs_allowed ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.earned_runs ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.hits_allowed ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.hr_allowed ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.strikeouts ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.walks_allowed ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.hit_batsmen ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center" style={{ width: '20px' }}>{stat.balks ?? "—"}</td>
-                        <td className="border-y border-l-0 border-r-0 border-gray-300 px-2 py-2 text-center">{stat.wild_pitches ?? "—"}</td>
+                      <tr key={stat.key} className="border-b last:border-b-0">
+                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle w-10">{stat.result == "-" ? "" : stat.result}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle min-w-[100px]">{stat.player || "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap min-w-[100px]">{stat.inning || "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.pitches ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.runs_allowed ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.earned_runs ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.hits_allowed ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.hr_allowed ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.strikeouts ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.walks_allowed ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.hit_batsmen ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.balks ?? "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap">{stat.wild_pitches ?? "—"}</td>
                       </tr>
                     ))
                   )}
                 </tbody>
               </table>
             </div>
+            </TabsContent>
           )}
+        </Tabs>
         </CardContent>
       </Card>
     </div>
