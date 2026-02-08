@@ -8,11 +8,23 @@ import type { Game, GameHitterStats, GamePitcherStats } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { getDisplayTeamName } from "@/lib/utils";
+import { useBreadcrumb } from "@/components/BreadcrumbContext";
 
 type Props = { params: Promise<{ id: string }> };
 
+function formatGameDateForBreadcrumb(dateStr: string | null): string {
+  if (!dateStr || dateStr.length !== 8) return "";
+  const y = parseInt(dateStr.slice(0, 4), 10);
+  const m = parseInt(dateStr.slice(4, 6), 10) - 1;
+  const d = parseInt(dateStr.slice(6, 8), 10);
+  const date = new Date(y, m, d);
+  const weekDays = ["日", "月", "火", "水", "木", "金", "土"];
+  return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日(${weekDays[date.getDay()]})`;
+}
+
 export default function GameDetailPage({ params }: Props) {
   const router = useRouter();
+  const { setBreadcrumbSegments, clearBreadcrumb } = useBreadcrumb();
   const [id, setId] = useState<string>("");
   const [game, setGame] = useState<Game | null>(null);
   const [loading, setLoading] = useState(true);
@@ -71,6 +83,11 @@ export default function GameDetailPage({ params }: Props) {
     fetchGame();
   }, [id]);
 
+  // マウント時に古いパンくずをクリアし、「試合詳細」の一瞬表示を防ぐ
+  useEffect(() => {
+    clearBreadcrumb();
+  }, [clearBreadcrumb]);
+
   // 打者成績と投手成績を取得
   useEffect(() => {
     if (!game || !game.date || !game.team || !game.start_time) return;
@@ -117,6 +134,17 @@ export default function GameDetailPage({ params }: Props) {
 
     fetchStats();
   }, [game]);
+
+  useEffect(() => {
+    if (game?.date != null) {
+      const teamDateLabel = `${getDisplayTeamName(game.top_team, null)} VS ${getDisplayTeamName(game.bottom_team, null)} ${formatGameDateForBreadcrumb(game.date)}`;
+      setBreadcrumbSegments([
+        { label: "試合結果", href: "/game" },
+        { label: teamDateLabel },
+      ]);
+    }
+    return () => clearBreadcrumb();
+  }, [game, setBreadcrumbSegments, clearBreadcrumb]);
 
   const handleBack = () => {
     // document.referrerをチェック（遷移元のURL）

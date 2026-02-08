@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { BreadcrumbProvider } from "@/components/BreadcrumbContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,9 +30,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <BreadcrumbProvider>
         <div className="min-h-screen flex flex-col">
           <Header />
           <main className="flex-1 container mx-auto max-w-[1024px] px-4 py-4">
+            <Breadcrumb />
             {children}
           </main>
           <footer className="border-t py-4 text-center text-sm text-muted-foreground">
@@ -39,6 +43,7 @@ export default function RootLayout({
             </div>
           </footer>
         </div>
+        </BreadcrumbProvider>
       </body>
     </html>
   );

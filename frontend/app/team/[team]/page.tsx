@@ -16,11 +16,13 @@ import type {
 } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TeamStatsTabs } from "@/components/TeamStatsTabs";
+import { useBreadcrumb } from "@/components/BreadcrumbContext";
 
 type Props = { params: Promise<{ team: string }> };
 
 export default function TeamDetailPage({ params }: Props) {
   const router = useRouter();
+  const { setBreadcrumbLabel, clearBreadcrumb } = useBreadcrumb();
   const [teamKey, setTeamKey] = useState<string>("");
   const [teamInfo, setTeamInfo] = useState<Team | null>(null);
   const [currentYearTeamStats, setCurrentYearTeamStats] = useState<TeamStats | null>(null);
@@ -221,6 +223,19 @@ export default function TeamDetailPage({ params }: Props) {
 
     fetchTeam();
   }, [teamKey]);
+
+  // マウント時に古いパンくずをクリアし、「チーム成績」の一瞬表示を防ぐ
+  useEffect(() => {
+    clearBreadcrumb();
+  }, [clearBreadcrumb]);
+
+  useEffect(() => {
+    if (teamInfo) {
+      const teamName = teamInfo.team_name ?? teamInfo.team ?? teamKey ?? "—";
+      setBreadcrumbLabel(`チーム成績(${teamName})`);
+    }
+    return () => clearBreadcrumb();
+  }, [teamInfo, teamKey, setBreadcrumbLabel, clearBreadcrumb]);
 
   const monthlyStats = useMemo(() => {
     const currentYear = new Date().getFullYear();

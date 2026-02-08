@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import type { Player } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlayerStatsTabs } from "@/components/PlayerStatsTabs";
+import { useBreadcrumb } from "@/components/BreadcrumbContext";
 import type {
   CareerHitterRow,
   CareerPitcherRow,
@@ -144,6 +145,7 @@ type Props = { params: Promise<{ id: string }> };
 
 export default function PlayerDetailPage({ params }: Props) {
   const router = useRouter();
+  const { setBreadcrumbSegments, clearBreadcrumb } = useBreadcrumb();
   const [team, setTeam] = useState<string>("");
   const [playerNumber, setPlayerNumber] = useState<string>("");
   const [player, setPlayer] = useState<Player | null>(null);
@@ -536,6 +538,22 @@ export default function PlayerDetailPage({ params }: Props) {
 
     fetchPlayer();
   }, [team, playerNumber]);
+
+  // マウント時に古いパンくずをクリアし、「選手詳細」の一瞬表示を防ぐ
+  useEffect(() => {
+    clearBreadcrumb();
+  }, [clearBreadcrumb]);
+
+  useEffect(() => {
+    if (player) {
+      const nameLabel = `${player.player_number ?? ""} ${player.player_name ?? ""}`.trim();
+      setBreadcrumbSegments([
+        { label: "選手一覧", href: "/player" },
+        { label: nameLabel },
+      ]);
+    }
+    return () => clearBreadcrumb();
+  }, [player, setBreadcrumbSegments, clearBreadcrumb]);
 
   const handleBack = () => {
     // document.referrerをチェック（遷移元のURL）
