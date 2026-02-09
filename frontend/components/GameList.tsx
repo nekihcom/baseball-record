@@ -383,14 +383,20 @@ export function GameList() {
     );
   }
 
+  // データが存在する年の範囲
+  const minYear = yearOptions.length > 0 ? yearOptions[yearOptions.length - 1] : selectedYear;
+  const maxYear = yearOptions.length > 0 ? yearOptions[0] : selectedYear;
+
   // 前年・翌年への移動関数
   const goToPreviousYear = () => {
+    if (selectedYear <= minYear) return;
     const newYear = selectedYear - 1;
     setSelectedYear(newYear);
     updateURLParams(newYear, selectedTeam);
   };
 
   const goToNextYear = () => {
+    if (selectedYear >= maxYear) return;
     const newYear = selectedYear + 1;
     setSelectedYear(newYear);
     updateURLParams(newYear, selectedTeam);
@@ -404,7 +410,8 @@ export function GameList() {
         {/* 前年ボタン */}
         <button
           onClick={goToPreviousYear}
-          className="flex items-center justify-center h-8 px-4 border border-foreground rounded bg-background hover:bg-accent transition-colors"
+          disabled={selectedYear <= minYear}
+          className={`flex items-center justify-center h-8 px-4 border border-foreground rounded bg-background transition-colors ${selectedYear <= minYear ? "opacity-50 cursor-not-allowed" : "hover:bg-accent"}`}
           aria-label="前年"
         >
           <span className="text-sm font-medium whitespace-nowrap">前年</span>
@@ -434,7 +441,8 @@ export function GameList() {
         {/* 翌年ボタン */}
         <button
           onClick={goToNextYear}
-          className="flex items-center justify-center h-8 px-4 border border-foreground rounded bg-background hover:bg-accent transition-colors"
+          disabled={selectedYear >= maxYear}
+          className={`flex items-center justify-center h-8 px-4 border border-foreground rounded bg-background transition-colors ${selectedYear >= maxYear ? "opacity-50 cursor-not-allowed" : "hover:bg-accent"}`}
           aria-label="翌年"
         >
           <span className="text-sm font-medium whitespace-nowrap">翌年</span>
