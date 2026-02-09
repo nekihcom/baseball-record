@@ -73,7 +73,7 @@ export function Breadcrumb() {
     if (ctx.breadcrumb.type === "label") {
       return (
         <nav aria-label="パンくず" className="mb-4">
-          <ol className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
+          <ol className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap w-fit">
             <BreadcrumbItem label="TOP" href="/" />
             <li aria-hidden="true">{" > "}</li>
             <BreadcrumbItem label={ctx.breadcrumb.label} isCurrent />
@@ -85,7 +85,7 @@ export function Breadcrumb() {
       const segments = ctx.breadcrumb.segments;
       return (
         <nav aria-label="パンくず" className="mb-4">
-          <ol className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
+          <ol className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap w-fit">
             <BreadcrumbItem label="TOP" href="/" />
             {segments.flatMap((seg, i) => [
               <li key={`sep-${i}`} aria-hidden="true">
@@ -109,7 +109,7 @@ export function Breadcrumb() {
   if (pendingSegments && pendingSegments.length > 0) {
     return (
       <nav aria-label="パンくず" className="mb-4">
-        <ol className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
+        <ol className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap w-fit">
           <BreadcrumbItem label="TOP" href="/" />
           {pendingSegments.flatMap((seg, i) => [
             <li key={`sep-${i}`} aria-hidden="true">
@@ -133,7 +133,7 @@ export function Breadcrumb() {
 
   return (
     <nav aria-label="パンくず" className="mb-4">
-      <ol className="flex items-center gap-2 text-sm text-muted-foreground">
+      <ol className="flex items-center gap-2 text-sm text-muted-foreground w-fit">
         <li>
           <Link href="/" className="hover:text-foreground transition-colors">
             TOP

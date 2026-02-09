@@ -1,8 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useMemo } from "react";
@@ -22,7 +19,6 @@ import { useBreadcrumb } from "@/components/BreadcrumbContext";
 type Props = { params: Promise<{ team: string }> };
 
 export default function TeamStatsPage({ params }: Props) {
-  const router = useRouter();
   const { setBreadcrumbLabel, clearBreadcrumb } = useBreadcrumb();
   const [teamKey, setTeamKey] = useState<string>("");
   const [teamInfo, setTeamInfo] = useState<Team | null>(null);
@@ -314,31 +310,12 @@ export default function TeamStatsPage({ params }: Props) {
     return rows;
   }, [currentYearGames, currentYearGameHitterStats, currentYearGamePitcherStats]);
 
-  const handleBack = () => {
-    if (typeof window !== "undefined" && document.referrer) {
-      const referrerUrl = new URL(document.referrer);
-      const currentUrl = new URL(window.location.href);
-      if (referrerUrl.origin === currentUrl.origin) {
-        router.back();
-        return;
-      }
-    }
-    router.push("/team");
-  };
-
   if (loading) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Button onClick={handleBack} variant="outline" size="sm">
-            戻る
-          </Button>
-        </div>
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-            <p className="text-base text-muted-foreground">読み込み中...</p>
-          </div>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-base text-muted-foreground">読み込み中...</p>
         </div>
       </div>
     );
@@ -346,52 +323,28 @@ export default function TeamStatsPage({ params }: Props) {
 
   if (error) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Button onClick={handleBack} variant="outline" size="sm">
-            戻る
-          </Button>
-        </div>
-        <Card className="border-none shadow-none">
-          <CardHeader />
-          <CardContent>
-            <p className="text-destructive">{error}</p>
-          </CardContent>
-        </Card>
-      </div>
+      <Card className="border-none shadow-none">
+        <CardHeader />
+        <CardContent>
+          <p className="text-destructive">{error}</p>
+        </CardContent>
+      </Card>
     );
   }
 
   if (!teamInfo) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Button onClick={handleBack} variant="outline" size="sm">
-            戻る
-          </Button>
-        </div>
-        <Card className="border-none shadow-none">
-          <CardHeader />
-          <CardContent>
-            <p className="text-muted-foreground">チームが見つかりませんでした</p>
-          </CardContent>
-        </Card>
-      </div>
+      <Card className="border-none shadow-none">
+        <CardHeader />
+        <CardContent>
+          <p className="text-muted-foreground">チームが見つかりませんでした</p>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-2 mb-0">
-        <Button onClick={handleBack} variant="outline" size="sm">
-          戻る
-        </Button>
-        {teamKey && (
-          <Button asChild variant="outline" size="sm">
-            <Link href={`/team/${teamKey}/player`}>選手一覧</Link>
-          </Button>
-        )}
-      </div>
       <Card className="border-none shadow-none">
         <CardHeader className="px-0">
           <CardTitle className="text-2xl">

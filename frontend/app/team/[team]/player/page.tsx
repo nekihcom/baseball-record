@@ -6,14 +6,9 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Player, Team } from "@/lib/types";
-import { getDisplayTeamName as getDisplayTeamNameUtil } from "@/lib/utils";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageLayout } from "@/components/PageLayout";
 import { useBreadcrumb } from "@/components/BreadcrumbContext";
-
-function getDisplayTeamName(teamName: string | null, teamKey: string | null): string {
-  return getDisplayTeamNameUtil(teamName, teamKey);
-}
 
 type Props = { params: Promise<{ team: string }> };
 
@@ -98,18 +93,6 @@ export default function TeamPlayersPage({ params }: Props) {
     };
   }, [teamKey]);
 
-  const handleBack = () => {
-    if (typeof window !== "undefined" && document.referrer) {
-      const referrerUrl = new URL(document.referrer);
-      const currentUrl = new URL(window.location.href);
-      if (referrerUrl.origin === currentUrl.origin) {
-        router.back();
-        return;
-      }
-    }
-    router.push(`/team/${teamKey}/stats`);
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -136,26 +119,16 @@ export default function TeamPlayersPage({ params }: Props) {
     );
   }
 
-  const teamName = teamInfo.team_name ?? teamInfo.team ?? teamKey ?? "—";
-
   return (
     <PageLayout>
       <div className="space-y-6">
-        <div className="flex items-center gap-2">
-          <Button onClick={handleBack} variant="outline" size="sm">
-            戻る
-          </Button>
-          <Button asChild variant="outline" size="sm">
-            <Link href={`/team/${teamKey}/stats`}>チーム成績</Link>
-          </Button>
-        </div>
-        <div
-          className="flex items-center justify-between gap-4 px-4 py-2 rounded-md"
-          style={{ backgroundColor: "#333333", color: "white" }}
-        >
-          <h1 className="text-lg font-semibold">{getDisplayTeamName(teamName, teamKey)}</h1>
-          {/* <span className="text-sm">選手一覧</span> */}
-        </div>
+        <Card className="border-none shadow-none">
+          <CardHeader className="px-0">
+            <CardTitle className="text-2xl">
+              {teamInfo.team_name ?? teamInfo.team ?? teamKey ?? "—"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="px-0 pt-4">
         {players.length === 0 ? (
           <div className="text-center py-12 text-base text-muted-foreground">
             所属選手はいません
@@ -197,6 +170,8 @@ export default function TeamPlayersPage({ params }: Props) {
             })}
           </div>
         )}
+          </CardContent>
+        </Card>
       </div>
     </PageLayout>
   );

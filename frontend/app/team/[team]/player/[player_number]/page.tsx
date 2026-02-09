@@ -1,7 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Player } from "@/lib/types";
@@ -134,7 +132,6 @@ function aggregateGamePitcherStatsByYear(
 type Props = { params: Promise<{ team: string; player_number: string }> };
 
 export default function TeamPlayerDetailPage({ params }: Props) {
-  const router = useRouter();
   const { setBreadcrumbSegments, clearBreadcrumb } = useBreadcrumb();
   const [team, setTeam] = useState<string>("");
   const [playerNumber, setPlayerNumber] = useState<string>("");
@@ -539,26 +536,9 @@ export default function TeamPlayerDetailPage({ params }: Props) {
     return () => clearBreadcrumb();
   }, [player, team, setBreadcrumbSegments, clearBreadcrumb]);
 
-  const handleBack = () => {
-    if (typeof window !== "undefined" && document.referrer) {
-      const referrerUrl = new URL(document.referrer);
-      const currentUrl = new URL(window.location.href);
-      if (referrerUrl.origin === currentUrl.origin) {
-        router.back();
-        return;
-      }
-    }
-    router.push(`/team/${team}/player`);
-  };
-
   if (loading) {
     return (
       <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Button onClick={handleBack} variant="outline" size="sm">
-            戻る
-          </Button>
-        </div>
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="flex flex-col items-center gap-4">
             <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
@@ -572,11 +552,6 @@ export default function TeamPlayerDetailPage({ params }: Props) {
   if (error) {
     return (
       <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Button onClick={handleBack} variant="outline" size="sm">
-            戻る
-          </Button>
-        </div>
         <Card className="border-none shadow-none">
           <CardHeader>
           </CardHeader>
@@ -591,11 +566,6 @@ export default function TeamPlayerDetailPage({ params }: Props) {
   if (!player) {
     return (
       <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Button onClick={handleBack} variant="outline" size="sm">
-            戻る
-          </Button>
-        </div>
         <Card className="border-none shadow-none">
           <CardHeader>
           </CardHeader>
@@ -609,11 +579,6 @@ export default function TeamPlayerDetailPage({ params }: Props) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-2 mb-0">
-        <Button onClick={handleBack} variant="outline" size="sm">
-          戻る
-        </Button>
-      </div>
       <Card className="border-none shadow-none">
         <CardHeader className="px-0 flex items-center gap-2">
           <p className="text-3xl font-bold min-w-10">

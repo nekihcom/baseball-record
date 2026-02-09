@@ -147,24 +147,6 @@ export default function GameDetailPage({ params }: Props) {
     return () => clearBreadcrumb();
   }, [game, setBreadcrumbSegments, clearBreadcrumb]);
 
-  const handleBack = () => {
-    // document.referrerをチェック（遷移元のURL）
-    // 同じオリジン内で遷移してきた場合は戻る、それ以外は/gameに遷移
-    if (typeof window !== "undefined" && document.referrer) {
-      const referrerUrl = new URL(document.referrer);
-      const currentUrl = new URL(window.location.href);
-      
-      // 同じオリジン内で遷移してきた場合は戻る
-      if (referrerUrl.origin === currentUrl.origin) {
-        router.back();
-        return;
-      }
-    }
-    
-    // 遷移前のページがない場合は/gameに遷移
-    router.push("/game");
-  };
-
   // 各回の得点を配列に変換（1-7イニングのみ）
   const getInningScores = (game: Game, isTop: boolean): (number | null)[] => {
     const scores: (number | null)[] = [];
@@ -251,17 +233,10 @@ export default function GameDetailPage({ params }: Props) {
 
   if (loading) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Button onClick={handleBack} variant="outline" size="sm">
-            戻る
-          </Button>
-        </div>
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-            <p className="text-base text-muted-foreground">読み込み中...</p>
-          </div>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-base text-muted-foreground">読み込み中...</p>
         </div>
       </div>
     );
@@ -269,18 +244,11 @@ export default function GameDetailPage({ params }: Props) {
 
   if (error || !game) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Button onClick={handleBack} variant="outline" size="sm">
-            戻る
-          </Button>
-        </div>
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-destructive">{error || "試合データが見つかりませんでした"}</p>
-          </CardContent>
-        </Card>
-      </div>
+      <Card>
+        <CardContent className="pt-6">
+          <p className="text-destructive">{error || "試合データが見つかりませんでした"}</p>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -289,12 +257,6 @@ export default function GameDetailPage({ params }: Props) {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Button onClick={handleBack} variant="outline" size="sm">
-          戻る
-        </Button>
-      </div>
-      
       {/* 試合概要 */}
       <div className="text-[#333333] px-0 py-3 rounded">
         <div className="flex items-center justify-between">
@@ -302,7 +264,7 @@ export default function GameDetailPage({ params }: Props) {
             <div className="text-3xl font-bold mb-1">
               {getDisplayTeamName(game.top_team, null)} VS {getDisplayTeamName(game.bottom_team, null)}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-fit">
               <p className="text-sm text-gray-500">{formatGameDate(game.date)} {game.start_time || ""}</p>
               <p className="text-sm text-gray-500">{game.place || ""}</p>
             </div>

@@ -448,7 +448,7 @@ export function GameList() {
       <CardHeader className="px-0">
         {/* 検索条件 */}
         <div className="mb-4 pb-4 border-b">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 w-fit">
             <label className="text-base font-medium whitespace-nowrap">チーム</label>
             <Select
               value={selectedTeam || "all"}
