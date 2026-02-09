@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Game, GameHitterStats, GamePitcherStats } from "@/lib/types";
 import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { getDisplayTeamName } from "@/lib/utils";
 import { useBreadcrumb } from "@/components/BreadcrumbContext";
@@ -183,6 +184,44 @@ export default function GameDetailPage({ params }: Props) {
     return name.replace(/\s*\([^)]*\)/g, "").trim();
   };
 
+  // 責任投手名から選手詳細リンクを解決（投手成績一覧から名前で検索）
+  const getPitcherPlayerLink = (
+    pitcherName: string | null,
+    stats: GamePitcherStats[]
+  ): { team: string; playerNumber: number } | null => {
+    if (!pitcherName) return null;
+    const cleaned = cleanPitcherName(pitcherName);
+    if (!cleaned) return null;
+    const found = stats.find(
+      (s) =>
+        s.team != null &&
+        s.player_number != null &&
+        cleanPitcherName(s.player) === cleaned
+    );
+    return found?.team != null && found?.player_number != null
+      ? { team: found.team, playerNumber: found.player_number }
+      : null;
+  };
+
+  // 打者名から選手詳細リンクを解決（打者成績一覧から名前で検索）
+  const getHitterPlayerLink = (
+    playerName: string | null,
+    stats: GameHitterStats[]
+  ): { team: string; playerNumber: number } | null => {
+    if (!playerName) return null;
+    const trimmed = (playerName ?? "").trim();
+    if (!trimmed) return null;
+    const found = stats.find(
+      (s) =>
+        s.team != null &&
+        s.player_number != null &&
+        (s.player?.trim() === trimmed || cleanPitcherName(s.player) === trimmed)
+    );
+    return found?.team != null && found?.player_number != null
+      ? { team: found.team, playerNumber: found.player_number }
+      : null;
+  };
+
   // 日付文字列（yyyymmdd）からDateオブジェクトを作成
   const parseDate = (dateStr: string | null): Date | null => {
     if (!dateStr || dateStr.length !== 8) return null;
@@ -332,13 +371,33 @@ export default function GameDetailPage({ params }: Props) {
                 <tr>
                   <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold" style={{ backgroundColor: '#333333' }}>勝</td>
                   <td className="border border-gray-300 px-4 py-2">
-                    {cleanPitcherName(game.win_pitcher) || ""}
+                    {(() => {
+                      const link = getPitcherPlayerLink(game.win_pitcher, pitcherStats);
+                      const name = cleanPitcherName(game.win_pitcher) || "";
+                      return link ? (
+                        <Link href={`/team/${link.team}/player/${link.playerNumber}`} className="text-primary hover:underline">
+                          {name}
+                        </Link>
+                      ) : (
+                        name
+                      );
+                    })()}
                   </td>
                 </tr>
                 <tr>
                   <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold" style={{ backgroundColor: '#333333' }}>負</td>
                   <td className="border border-gray-300 px-4 py-2">
-                    {cleanPitcherName(game.lose_pitcher) || ""}
+                    {(() => {
+                      const link = getPitcherPlayerLink(game.lose_pitcher, pitcherStats);
+                      const name = cleanPitcherName(game.lose_pitcher) || "";
+                      return link ? (
+                        <Link href={`/team/${link.team}/player/${link.playerNumber}`} className="text-primary hover:underline">
+                          {name}
+                        </Link>
+                      ) : (
+                        name
+                      );
+                    })()}
                   </td>
                 </tr>
                 <tr>
@@ -350,7 +409,17 @@ export default function GameDetailPage({ params }: Props) {
                 <tr>
                   <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold" style={{ backgroundColor: '#333333' }}>HR</td>
                   <td className="border border-gray-300 px-4 py-2">
-                    {game.hr_player || ""}
+                    {(() => {
+                      const link = getHitterPlayerLink(game.hr_player, hitterStats);
+                      const name = game.hr_player || "";
+                      return link ? (
+                        <Link href={`/team/${link.team}/player/${link.playerNumber}`} className="text-primary hover:underline">
+                          {name}
+                        </Link>
+                      ) : (
+                        name
+                      );
+                    })()}
                   </td>
                 </tr>
               </tbody>
@@ -422,7 +491,18 @@ export default function GameDetailPage({ params }: Props) {
                     hitterStats.map((stat) => (
                       <tr key={stat.key} className="border-b last:border-b-0">
                         <td className="px-2 py-1 text-center whitespace-nowrap align-middle">{stat.position || "—"}</td>
-                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle min-w-[80px]">{stat.player || "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle min-w-[80px]">
+                        {stat.team != null && stat.player_number != null ? (
+                          <Link
+                            href={`/team/${stat.team}/player/${stat.player_number}`}
+                            className="text-primary hover:underline"
+                          >
+                            {stat.player || "—"}
+                          </Link>
+                        ) : (
+                          stat.player || "—"
+                        )}
+                      </td>
                         <td className="px-2 py-1 text-center whitespace-nowrap">{stat.plate_apperance ?? "—"}</td>
                         <td className="px-2 py-1 text-center whitespace-nowrap">{stat.at_bat ?? "—"}</td>
                         <td className="px-2 py-1 text-center whitespace-nowrap">{stat.hit ?? "—"}</td>
@@ -482,7 +562,18 @@ export default function GameDetailPage({ params }: Props) {
                     pitcherStats.map((stat) => (
                       <tr key={stat.key} className="border-b last:border-b-0">
                         <td className="px-2 py-1 text-center whitespace-nowrap align-middle w-10">{stat.result == "-" ? "" : stat.result}</td>
-                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle min-w-[100px]">{stat.player || "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle min-w-[100px]">
+                        {stat.team != null && stat.player_number != null ? (
+                          <Link
+                            href={`/team/${stat.team}/player/${stat.player_number}`}
+                            className="text-primary hover:underline"
+                          >
+                            {stat.player || "—"}
+                          </Link>
+                        ) : (
+                          stat.player || "—"
+                        )}
+                      </td>
                         <td className="px-2 py-1 text-center whitespace-nowrap min-w-[100px]">{stat.inning || "—"}</td>
                         <td className="px-2 py-1 text-center whitespace-nowrap">{stat.pitches ?? "—"}</td>
                         <td className="px-2 py-1 text-center whitespace-nowrap">{stat.runs_allowed ?? "—"}</td>

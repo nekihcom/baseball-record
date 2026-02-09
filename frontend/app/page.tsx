@@ -29,20 +29,8 @@ export default function Home() {
 
         <Card>
           <CardHeader>
-            <CardTitle>選手一覧</CardTitle>
-            <CardDescription>選手成績を検索・閲覧</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild className="w-full">
-              <Link href="/player">選手一覧を見る</Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
             <CardTitle>チーム一覧</CardTitle>
-            <CardDescription>チーム成績を閲覧</CardDescription>
+            <CardDescription>チーム成績・選手一覧を閲覧（チームを選んで選手へ）</CardDescription>
           </CardHeader>
           <CardContent>
             <Button asChild className="w-full">

@@ -18,9 +18,8 @@ export function Header() {
 
   const navItems = [
     { href: "/", label: "ホーム" },
-    { href: "/games", label: "試合一覧" },
-    { href: "/players", label: "選手一覧" },
-    { href: "/teams", label: "チーム一覧" },
+    { href: "/game", label: "試合一覧" },
+    { href: "/team", label: "チーム一覧" },
   ];
 
   return (
@@ -33,7 +32,7 @@ export function Header() {
             className="text-xl font-bold"
             onClick={closeMenu}
           >
-            野球記録システム
+            仮称・野球レポート
           </Link>
 
           {/* ハンバーガーボタン */}

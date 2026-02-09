@@ -46,7 +46,7 @@ type TeamStatsTabsProps = {
   monthlyStats?: MonthlyTeamStats[];
 };
 
-/** 選手名セル（teamKey があるとき /player/${teamKey}_${playerNumber} へのリンク） */
+/** 選手名セル（teamKey があるとき /team/${teamKey}/player/${playerNumber} へのリンク） */
 function PlayerNameCell({
   teamKey,
   playerNumber,
@@ -59,7 +59,7 @@ function PlayerNameCell({
   if (teamKey != null && playerNumber != null) {
     return (
       <Link
-        href={`/player/${teamKey}_${playerNumber}`}
+        href={`/team/${teamKey}/player/${playerNumber}`}
         className="text-primary hover:underline"
       >
         {displayText || "—"}
