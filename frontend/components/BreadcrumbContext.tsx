@@ -20,12 +20,15 @@ type BreadcrumbContextType = {
   setBreadcrumbLabel: (label: string) => void;
   setBreadcrumbSegments: (segments: BreadcrumbSegment[]) => void;
   clearBreadcrumb: () => void;
+  hideBreadcrumb: boolean;
+  setHideBreadcrumb: (hide: boolean) => void;
 };
 
 export const BreadcrumbContext = createContext<BreadcrumbContextType | null>(null);
 
 export function BreadcrumbProvider({ children }: { children: ReactNode }) {
   const [breadcrumb, setBreadcrumb] = useState<BreadcrumbValue>(null);
+  const [hideBreadcrumb, setHideBreadcrumb] = useState(false);
 
   const setBreadcrumbLabel = useCallback((label: string) => {
     setBreadcrumb({ type: "label", label });
@@ -46,6 +49,8 @@ export function BreadcrumbProvider({ children }: { children: ReactNode }) {
         setBreadcrumbLabel,
         setBreadcrumbSegments,
         clearBreadcrumb,
+        hideBreadcrumb,
+        setHideBreadcrumb,
       }}
     >
       {children}

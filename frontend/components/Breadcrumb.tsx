@@ -62,7 +62,7 @@ export function Breadcrumb() {
   const pathname = usePathname();
   const ctx = useContext(BreadcrumbContext) ?? null;
 
-  if (pathname === "/") return null;
+  if (pathname === "/" || ctx?.hideBreadcrumb) return null;
 
   // リストページではコンテキストを参照しない（前の詳細ページのパンくずが残らないようにする）
   const isListPage = pathname === "/player" || pathname === "/team" || pathname === "/game";
