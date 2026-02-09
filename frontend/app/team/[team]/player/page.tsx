@@ -35,8 +35,8 @@ export default function TeamPlayersPage({ params }: Props) {
     if (teamInfo) {
       const teamName = teamInfo.team_name ?? teamInfo.team ?? teamKey ?? "—";
       setBreadcrumbSegments([
-        { label: "チーム一覧", href: "/team" },
-        { label: `チーム成績(${teamName})`, href: `/team/${teamKey}/stats` },
+        // パンくず: TOP > チーム名 > 選手一覧
+        { label: teamName, href: `/team/${teamKey}/stats` },
         { label: "選手一覧" },
       ]);
     }

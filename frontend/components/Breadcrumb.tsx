@@ -14,11 +14,10 @@ const PATH_LABELS: Record<string, string> = {
 
 type PendingSegment = { label: string; href?: string };
 
-/** 動的ルートでデータ未読込時、親階層のみ表示するためのセグメント */
+/** 動的ルートでデータ未読込時、誤った情報を出さないためローディング表示のみ（/team/ は上で null 返すため対象外） */
 function getPendingSegments(pathname: string): PendingSegment[] | null {
-  if (pathname.startsWith("/player/")) return [{ label: "選手一覧" }];
-  if (pathname.startsWith("/team/")) return [{ label: "チーム一覧" }];
-  if (pathname.startsWith("/game/")) return [{ label: "試合結果" }];
+  if (pathname.startsWith("/player/")) return [{ label: "読み込み中..." }];
+  if (pathname.startsWith("/game/")) return [{ label: "読み込み中..." }];
   return null;
 }
 
@@ -103,6 +102,9 @@ export function Breadcrumb() {
       );
     }
   }
+
+  // チーム系動的ルートでは ctx.breadcrumb が入るまでパンくずを出さない（誤表示を防ぐ）
+  if (pathname.startsWith("/team/")) return null;
 
   // 動的ルートでデータ未読込時は親階層のみ表示（「選手詳細」等の一瞬表示を防ぐ）
   const pendingSegments = getPendingSegments(pathname);

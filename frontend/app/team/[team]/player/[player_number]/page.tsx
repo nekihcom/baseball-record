@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import type { Player } from "@/lib/types";
+import type { Player, Team } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PlayerStatsTabs } from "@/components/PlayerStatsTabs";
 import { useBreadcrumb } from "@/components/BreadcrumbContext";
@@ -136,6 +136,7 @@ export default function TeamPlayerDetailPage({ params }: Props) {
   const [team, setTeam] = useState<string>("");
   const [playerNumber, setPlayerNumber] = useState<string>("");
   const [player, setPlayer] = useState<Player | null>(null);
+  const [teamInfo, setTeamInfo] = useState<Team | null>(null);
   const [hasCurrentYearPitcherStats, setHasCurrentYearPitcherStats] = useState(false);
   const [hasCareerPitcherStats, setHasCareerPitcherStats] = useState(false);
   const [currentYearHitterStats, setCurrentYearHitterStats] = useState<SeasonHitterStats | null>(null);
@@ -225,6 +226,7 @@ export default function TeamPlayerDetailPage({ params }: Props) {
           { data: careerGameHitterData, error: careerGameHitterError },
           { data: careerGameInfoData, error: careerGameInfoError },
           { data: careerGamePitcherData, error: careerGamePitcherError },
+          { data: teamInfoData, error: teamInfoError },
         ] = await Promise.all([
           supabase
             .from("transaction_hitter_stats")
@@ -322,6 +324,12 @@ export default function TeamPlayerDetailPage({ params }: Props) {
             .eq("delete_flg", 0)
             .order("date", { ascending: false })
             .order("start_time", { ascending: false }),
+          supabase
+            .from("master_teams_info")
+            .select("*")
+            .eq("key", team)
+            .eq("delete_flg", 0)
+            .single(),
         ]);
 
         // PGRST116 = 行が0件（.single()で該当なし）。成績なしは想定内のためエラーログは出さない
@@ -508,6 +516,15 @@ export default function TeamPlayerDetailPage({ params }: Props) {
           }));
           setCareerGamesPitcherStatsWithPlace(careerPitcherWithPlace);
         }
+
+        if (teamInfoError) {
+          console.error("チーム情報の取得に失敗しました:", teamInfoError);
+          setTeamInfo(null);
+        } else if (teamInfoData) {
+          setTeamInfo(teamInfoData as Team);
+        } else {
+          setTeamInfo(null);
+        }
       } catch (e) {
         setError(e instanceof Error ? e.message : "データの取得に失敗しました");
       } finally {
@@ -525,16 +542,18 @@ export default function TeamPlayerDetailPage({ params }: Props) {
 
   useEffect(() => {
     if (player && team) {
+      // パンくず: TOP > チーム名 > 選手一覧 > 背番号 選手名
+      const teamLabel =
+        teamInfo?.team_name ?? teamInfo?.team ?? player.team ?? team ?? "—";
       const nameLabel = `${player.player_number ?? ""} ${player.player_name ?? ""}`.trim();
       setBreadcrumbSegments([
-        { label: "チーム一覧", href: "/team" },
-        { label: "チーム成績", href: `/team/${team}/stats` },
+        { label: teamLabel, href: `/team/${team}/stats` },
         { label: "選手一覧", href: `/team/${team}/player` },
         { label: nameLabel },
       ]);
     }
     return () => clearBreadcrumb();
-  }, [player, team, setBreadcrumbSegments, clearBreadcrumb]);
+  }, [player, team, teamInfo, setBreadcrumbSegments, clearBreadcrumb]);
 
   if (loading) {
     return (

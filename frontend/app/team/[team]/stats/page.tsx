@@ -228,7 +228,8 @@ export default function TeamStatsPage({ params }: Props) {
   useEffect(() => {
     if (teamInfo) {
       const teamName = teamInfo.team_name ?? teamInfo.team ?? teamKey ?? "—";
-      setBreadcrumbLabel(`チーム成績(${teamName})`);
+      // パンくず: TOP > チーム名
+      setBreadcrumbLabel(teamName);
     }
     return () => clearBreadcrumb();
   }, [teamInfo, teamKey, setBreadcrumbLabel, clearBreadcrumb]);
