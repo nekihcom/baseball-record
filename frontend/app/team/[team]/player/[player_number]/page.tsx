@@ -599,6 +599,13 @@ export default function TeamPlayerDetailPage({ params }: Props) {
   return (
     <div className="space-y-6">
       <Card className="border-none shadow-none">
+        <CardHeader className="px-0">
+          <CardTitle className="text-2xl">
+            {teamInfo?.team_name ?? teamInfo?.team ?? team ?? "—"}
+          </CardTitle>
+        </CardHeader>
+      </Card>
+      <Card className="border-none shadow-none">
         <CardHeader className="px-0 flex items-center gap-2">
           <p className="text-3xl font-bold min-w-10">
             {player.player_number != null ? `${player.player_number}` : "—"}

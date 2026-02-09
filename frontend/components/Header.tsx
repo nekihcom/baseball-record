@@ -17,9 +17,8 @@ export function Header() {
   };
 
   const navItems = [
-    { href: "/", label: "ホーム" },
-    { href: "/game", label: "試合一覧" },
-    { href: "/team", label: "チーム一覧" },
+    { href: "/", label: "トップ" },
+    { href: "/game", label: "試合結果" },
   ];
 
   return (
@@ -32,7 +31,7 @@ export function Header() {
             className="text-xl font-bold"
             onClick={closeMenu}
           >
-            仮称・野球レポート
+            （仮称）草野球レポート
           </Link>
 
           {/* ハンバーガーボタン */}

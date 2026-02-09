@@ -73,7 +73,7 @@ export function Breadcrumb() {
       return (
         <nav aria-label="パンくず" className="mb-4">
           <ol className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap w-fit">
-            <BreadcrumbItem label="TOP" href="/" />
+            <BreadcrumbItem label="トップ" href="/" />
             <li aria-hidden="true">{" > "}</li>
             <BreadcrumbItem label={ctx.breadcrumb.label} isCurrent />
           </ol>
@@ -85,7 +85,7 @@ export function Breadcrumb() {
       return (
         <nav aria-label="パンくず" className="mb-4">
           <ol className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap w-fit">
-            <BreadcrumbItem label="TOP" href="/" />
+            <BreadcrumbItem label="トップ" href="/" />
             {segments.flatMap((seg, i) => [
               <li key={`sep-${i}`} aria-hidden="true">
                 {" > "}
@@ -112,7 +112,7 @@ export function Breadcrumb() {
     return (
       <nav aria-label="パンくず" className="mb-4">
         <ol className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap w-fit">
-          <BreadcrumbItem label="TOP" href="/" />
+          <BreadcrumbItem label="トップ" href="/" />
           {pendingSegments.flatMap((seg, i) => [
             <li key={`sep-${i}`} aria-hidden="true">
               {" > "}
@@ -138,7 +138,7 @@ export function Breadcrumb() {
       <ol className="flex items-center gap-2 text-sm text-muted-foreground w-fit">
         <li>
           <Link href="/" className="hover:text-foreground transition-colors">
-            TOP
+            トップ
           </Link>
         </li>
         <li aria-hidden="true">{" > "}</li>

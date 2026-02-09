@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useMemo } from "react";
@@ -348,8 +349,14 @@ export default function TeamStatsPage({ params }: Props) {
     <div className="space-y-6">
       <Card className="border-none shadow-none">
         <CardHeader className="px-0">
-          <CardTitle className="text-2xl">
-            {teamInfo.team_name ?? teamInfo.team ?? teamKey ?? "—"}
+          <CardTitle className="text-2xl flex flex-wrap items-baseline gap-0">
+            <span>{teamInfo.team_name ?? teamInfo.team ?? teamKey ?? "—"}</span>
+            <Link
+              href={`/team/${teamKey}/player`}
+              className="text-sm text-muted-foreground hover:opacity-80 ml-4"
+            >
+              選手一覧
+            </Link>
           </CardTitle>
         </CardHeader>
         <CardContent className="px-0 space-y-8">

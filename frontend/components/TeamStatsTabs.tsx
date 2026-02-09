@@ -698,7 +698,7 @@ function PitcherTitleRankingsSection({
   const ruleText = `規定投球回：${kitei_inning}`;
 
   return (
-    <div className="mt-6">
+    <div className="mt-18">
       <div className="flex flex-wrap items-baseline gap-2 mb-4">
         <h2 className="text-base font-semibold">主要タイトルランキング</h2>
         <span className="text-sm text-muted-foreground">{ruleText}</span>
@@ -809,7 +809,7 @@ function TitleRankingsSection({
   const ruleText = `規定打席：${kitei_daseki}`;
 
   return (
-    <div className="mt-6">
+    <div className="mt-18">
       <div className="flex flex-wrap items-baseline gap-2 mb-4">
         <h2 className="text-base font-semibold">主要タイトルランキング</h2>
         <span className="text-sm text-muted-foreground">{ruleText}</span>
