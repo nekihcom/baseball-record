@@ -383,6 +383,12 @@ export default function TeamStatsPage({ params }: Props) {
           <CardTitle className="text-2xl flex flex-wrap items-baseline gap-0">
             <span>{teamInfo.team_name ?? teamInfo.team ?? teamKey ?? "—"}</span>
             <Link
+              href="/game"
+              className="text-sm text-muted-foreground hover:opacity-80 ml-4"
+            >
+              試合結果
+            </Link>
+            <Link
               href={`/team/${teamKey}/player`}
               className="text-sm text-muted-foreground hover:opacity-80 ml-4"
             >
