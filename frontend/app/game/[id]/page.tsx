@@ -18,7 +18,7 @@ function VerticalText({ text }: { text: string }) {
   return (
     <span className="inline-flex flex-col items-center gap-[0.1em]">
       {Array.from(text).map((char, i) => (
-        <span key={i} className="leading-none">{char}</span>
+        <span key={i} className="leading-none" style={char === "ー" ? { display: "inline-block", transform: "rotate(90deg)" } : undefined}>{char}</span>
       ))}
     </span>
   );
