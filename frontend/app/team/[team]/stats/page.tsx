@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase";
 import { useMemo } from "react";
 import type {
   Team,
+  Player,
   TeamStats,
   HitterStats,
   PitcherStats,
@@ -80,6 +81,7 @@ export default function TeamStatsPage({ params }: Props) {
           { data: gameHitterData, error: gameHitterError },
           { data: gamePitcherData, error: gamePitcherError },
           { data: teamsData, error: teamsError },
+          { data: playersData, error: playersError },
         ] = await Promise.all([
           supabase
             .from("master_teams_info")
@@ -164,6 +166,11 @@ export default function TeamStatsPage({ params }: Props) {
             .from("master_teams_info")
             .select("key, team_name")
             .eq("delete_flg", 0),
+          supabase
+            .from("master_players_info")
+            .select("player_name, player_number")
+            .eq("team", teamKey)
+            .eq("delete_flg", 0),
         ]);
 
         if (teamError) {
@@ -174,6 +181,30 @@ export default function TeamStatsPage({ params }: Props) {
 
         setTeamInfo(teamData as Team);
 
+        // マスターデータから選手名 → 背番号のマッピングを構築
+        const playerNameToNumber: Record<string, number> = {};
+        if (!playersError && Array.isArray(playersData)) {
+          for (const p of playersData as Pick<Player, "player_name" | "player_number">[]) {
+            if (p.player_name != null && p.player_number != null) {
+              playerNameToNumber[p.player_name] = p.player_number;
+            }
+          }
+        }
+
+        // 成績データの player_number が null の場合、マスターデータから補完
+        const enrichHitterStats = (stats: HitterStats[]): HitterStats[] =>
+          stats.map((stat) =>
+            stat.player_number == null && stat.player != null && stat.player in playerNameToNumber
+              ? { ...stat, player_number: playerNameToNumber[stat.player] }
+              : stat
+          );
+        const enrichPitcherStats = (stats: PitcherStats[]): PitcherStats[] =>
+          stats.map((stat) =>
+            stat.player_number == null && stat.player != null && stat.player in playerNameToNumber
+              ? { ...stat, player_number: playerNameToNumber[stat.player] }
+              : stat
+          );
+
         if (!currentYearError && currentYearData) {
           setCurrentYearTeamStats(currentYearData as TeamStats);
         }
@@ -181,16 +212,16 @@ export default function TeamStatsPage({ params }: Props) {
           setCareerTeamStats(careerData as TeamStats[]);
         }
         if (!currentYearHitterError && Array.isArray(currentYearHitterData)) {
-          setCurrentYearHitterStats(currentYearHitterData as HitterStats[]);
+          setCurrentYearHitterStats(enrichHitterStats(currentYearHitterData as HitterStats[]));
         }
         if (!careerHitterError && Array.isArray(careerHitterData)) {
-          setCareerHitterStats(careerHitterData as HitterStats[]);
+          setCareerHitterStats(enrichHitterStats(careerHitterData as HitterStats[]));
         }
         if (!currentYearPitcherError && Array.isArray(currentYearPitcherData)) {
-          setCurrentYearPitcherStats(currentYearPitcherData as PitcherStats[]);
+          setCurrentYearPitcherStats(enrichPitcherStats(currentYearPitcherData as PitcherStats[]));
         }
         if (!careerPitcherError && Array.isArray(careerPitcherData)) {
-          setCareerPitcherStats(careerPitcherData as PitcherStats[]);
+          setCareerPitcherStats(enrichPitcherStats(careerPitcherData as PitcherStats[]));
         }
         if (!last3GamesError && Array.isArray(last3GamesData)) {
           setLast3Games(last3GamesData as Game[]);

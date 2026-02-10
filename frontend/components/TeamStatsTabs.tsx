@@ -453,7 +453,7 @@ function BattingLeaderBlock({
   const qualified = (hitterStats ?? []).filter(
     (row) =>
       (row.plate_appearance ?? 0) >= kitei_daseki &&
-      [row.player_number, row.player].filter(Boolean).join(" ").trim() !== ""
+      [row.player_number, row.player].filter((v) => v != null && v !== "").join(" ").trim() !== ""
   );
   const top5 = [...qualified]
     .sort((a, b) => {
@@ -506,7 +506,7 @@ function BattingLeaderBlock({
                   <PlayerNameCell
                     teamKey={teamKey}
                     playerNumber={row.player_number}
-                    displayText={[row.player_number, row.player].filter(Boolean).join(" ") || "—"}
+                    displayText={[row.player_number, row.player].filter((v) => v != null && v !== "").join(" ") || "—"}
                   />
                 </td>
                 <td className="px-2 py-1 text-left whitespace-nowrap">
@@ -588,7 +588,7 @@ function SimplePitcherTitleRanking({
   let qualified = (pitcherStats ?? []).filter(
     (row) =>
       ipNum(row) >= kiteiInning &&
-      [row.player_number, row.player].filter(Boolean).join(" ").trim() !== ""
+      [row.player_number, row.player].filter((v) => v != null && v !== "").join(" ").trim() !== ""
   );
   if (excludeZero) {
     qualified = qualified.filter((row) => getVal(row) > 0);
@@ -655,7 +655,7 @@ function SimplePitcherTitleRanking({
                     <PlayerNameCell
                       teamKey={teamKey}
                       playerNumber={row.player_number}
-                      displayText={[row.player_number, row.player].filter(Boolean).join(" ") || "—"}
+                      displayText={[row.player_number, row.player].filter((v) => v != null && v !== "").join(" ") || "—"}
                     />
                   </td>
                   <td className="px-2 py-1 text-left whitespace-nowrap">
@@ -940,7 +940,7 @@ function SimpleTitleRanking({
   const qualified = (hitterStats ?? []).filter(
     (row) =>
       getVal(row) > 0 &&
-      [row.player_number, row.player].filter(Boolean).join(" ").trim() !== ""
+      [row.player_number, row.player].filter((v) => v != null && v !== "").join(" ").trim() !== ""
   );
   const top5 = [...qualified]
     .sort((a, b) => getVal(b) - getVal(a))
@@ -999,7 +999,7 @@ function SimpleTitleRanking({
                   <PlayerNameCell
                     teamKey={teamKey}
                     playerNumber={row.player_number}
-                    displayText={[row.player_number, row.player].filter(Boolean).join(" ") || "—"}
+                    displayText={[row.player_number, row.player].filter((v) => v != null && v !== "").join(" ") || "—"}
                   />
                 </td>
                 <td className="px-2 py-1 text-left whitespace-nowrap">
@@ -1069,7 +1069,7 @@ function TeamHitterStatsTable({
     return <p className="text-sm text-muted-foreground">{emptyMessage}</p>;
   }
   const filtered = stats.filter(
-    (row) => [row.player_number, row.player].filter(Boolean).join(" ").trim() !== ""
+    (row) => [row.player_number, row.player].filter((v) => v != null && v !== "").join(" ").trim() !== ""
   );
   if (filtered.length === 0) {
     return <p className="text-sm text-muted-foreground">{emptyMessage}</p>;
@@ -1137,7 +1137,7 @@ function TeamHitterStatsTable({
                 <PlayerNameCell
                   teamKey={teamKey}
                   playerNumber={row.player_number}
-                  displayText={[row.player_number, row.player].filter(Boolean).join(" ") || "—"}
+                  displayText={[row.player_number, row.player].filter((v) => v != null && v !== "").join(" ") || "—"}
                 />
               </td>
               <td className="px-2 py-1 text-right whitespace-nowrap">{row.games_played ?? "—"}</td>
@@ -1230,7 +1230,7 @@ function TeamPitcherStatsTable({
     return <p className="text-sm text-muted-foreground">{emptyMessage}</p>;
   }
   const filtered = stats.filter(
-    (row) => [row.player_number, row.player].filter(Boolean).join(" ").trim() !== ""
+    (row) => [row.player_number, row.player].filter((v) => v != null && v !== "").join(" ").trim() !== ""
   );
   if (filtered.length === 0) {
     return <p className="text-sm text-muted-foreground">{emptyMessage}</p>;
@@ -1298,7 +1298,7 @@ function TeamPitcherStatsTable({
                 <PlayerNameCell
                   teamKey={teamKey}
                   playerNumber={row.player_number}
-                  displayText={[row.player_number, row.player].filter(Boolean).join(" ") || "—"}
+                  displayText={[row.player_number, row.player].filter((v) => v != null && v !== "").join(" ") || "—"}
                 />
               </td>
               <td className="px-2 py-1 text-right whitespace-nowrap">{row.games_played ?? "—"}</td>

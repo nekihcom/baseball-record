@@ -13,6 +13,17 @@ import { useBreadcrumb } from "@/components/BreadcrumbContext";
 
 type Props = { params: Promise<{ id: string }> };
 
+/** 縦書きテキスト（各文字を縦に積み重ねて表示。モバイル互換性のため writing-mode を使用しない） */
+function VerticalText({ text }: { text: string }) {
+  return (
+    <span className="inline-flex flex-col items-center gap-[0.1em]">
+      {Array.from(text).map((char, i) => (
+        <span key={i} className="leading-none">{char}</span>
+      ))}
+    </span>
+  );
+}
+
 function formatGameDateForBreadcrumb(dateStr: string | null): string {
   if (!dateStr || dateStr.length !== 8) return "";
   const y = parseInt(dateStr.slice(0, 4), 10);
@@ -416,30 +427,28 @@ export default function GameDetailPage({ params }: Props) {
               <table className="min-w-max text-sm border-collapse">
                 <thead className="bg-[#333333] text-white">
                   <tr className="border-b">
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap align-middle" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>守備</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap align-middle min-w-[80px]" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>
-                      <span>選手名</span>
-                    </th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>打席</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>打数</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>安打</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>本塁打</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>打点</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>得点</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>盗塁</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>二塁打</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>三塁打</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>得点圏打数</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>得点圏安打</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>三振</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>四球</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>死球</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>犠打</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>犠飛</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>併殺打</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>敵失</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>失策</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>盗塁阻止</th>
+                    <th className="px-2 py-1 text-center font-semibold align-middle"><VerticalText text="守備" /></th>
+                    <th className="px-2 py-1 text-center font-semibold align-middle min-w-[80px]"><VerticalText text="選手名" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="打席" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="打数" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="安打" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="本塁打" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="打点" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="得点" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="盗塁" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="二塁打" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="三塁打" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="得点圏打数" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="得点圏安打" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="三振" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="四球" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="死球" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="犠打" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="犠飛" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="併殺打" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="敵失" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="失策" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="盗塁阻止" /></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -498,19 +507,19 @@ export default function GameDetailPage({ params }: Props) {
               <table className="min-w-max text-sm border-collapse">
                 <thead className="bg-[#333333] text-white">
                   <tr className="border-b">
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap align-middle w-10" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>結果</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap align-middle min-w-[100px]" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>選手名</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>投球回</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>球数</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>失点</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>自責点</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>被安打</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>被本塁打</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>奪三振</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>与四球</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>与死球</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>ボーク</th>
-                    <th className="px-2 py-1 text-center font-semibold whitespace-nowrap" style={{ writingMode: 'vertical-lr', textOrientation: 'upright', letterSpacing: '0.1em' }}>暴投</th>
+                    <th className="px-2 py-1 text-center font-semibold align-middle w-10"><VerticalText text="結果" /></th>
+                    <th className="px-2 py-1 text-center font-semibold align-middle min-w-[100px]"><VerticalText text="選手名" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="投球回" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="球数" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="失点" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="自責点" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="被安打" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="被本塁打" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="奪三振" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="与四球" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="与死球" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="ボーク" /></th>
+                    <th className="px-2 py-1 text-center font-semibold"><VerticalText text="暴投" /></th>
                   </tr>
                 </thead>
                 <tbody>
