@@ -175,6 +175,7 @@ orcas_1, orcas, 1, 選手名B, ニックネームB
 | bottom_inning_score_1〜9 | 数値 | 後攻チームの1〜9回目の得点 |
 | win_pitcher | 文字列 | 勝利投手 |
 | lose_pitcher | 文字列 | 敗戦投手 |
+| save_pitcher | 文字列 | セーブ投手 |
 | hr_player | 文字列 | ホームラン打者 |
 
 #### 試合別打者成績 (output/02_game_hitter_stats.csv)

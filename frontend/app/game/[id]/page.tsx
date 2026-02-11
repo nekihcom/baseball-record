@@ -376,7 +376,21 @@ export default function GameDetailPage({ params }: Props) {
                 <tr>
                   <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold" style={{ backgroundColor: '#333333' }}>S</td>
                   <td className="border border-gray-300 px-4 py-2">
-                    {/* セーブ投手のデータは現在利用不可 */}
+                    {game.save_pitcher ? (
+                      (() => {
+                        const link = getPitcherPlayerLink(game.save_pitcher, pitcherStats);
+                        const name = cleanPitcherName(game.save_pitcher) || "";
+                        return link ? (
+                          <Link href={`/team/${link.team}/player/${link.playerNumber}`} className="text-primary hover:underline">
+                            {name}
+                          </Link>
+                        ) : (
+                          name
+                        );
+                      })()
+                    ) : (
+                      ""
+                    )}
                   </td>
                 </tr>
                 <tr>

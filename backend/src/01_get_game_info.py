@@ -86,9 +86,12 @@ def scrape_game_detail(url, team_name, player_lookup=None, teams_info=None):
     # start_time: .gameInfo01 .date .timeの値
     start_time = extract_start_time(soup)
     
-    # place: p.place > aの値
+    # place: p.place > aの値、なければp.placeの直接のテキスト
     place_elem = soup.select_one('p.place > a')
     place = extract_text(place_elem)
+    if not place:
+        place_elem = soup.select_one('p.place')
+        place = extract_text(place_elem)
     
     # top_team: .gameInfo02 > .rowの最初の子要素(divタグ)の孫要素であるspanタグの値
     # bottom_team: .gameInfo02 > .rowの最後の子要素(divタグ)の孫要素であるspanタグの値
@@ -186,6 +189,10 @@ def scrape_game_detail(url, team_name, player_lookup=None, teams_info=None):
     lose_pitcher_nickname = extract_game_detail(soup, 'lose')
     lose_pitcher = convert_player_name(lose_pitcher_nickname, team_name, player_lookup) if player_lookup else lose_pitcher_nickname
     
+    # save_pitcher: .gameDetailInfo01 > .save > .nameBlock > aの値
+    save_pitcher_nickname = extract_game_detail(soup, 'save')
+    save_pitcher = convert_player_name(save_pitcher_nickname, team_name, player_lookup) if player_lookup else save_pitcher_nickname
+    
     # hr_player: .gameDetailInfo01 > .hr > .nameBlock > aの値
     hr_player_nickname = extract_game_detail(soup, 'hr')
     hr_player = convert_player_name(hr_player_nickname, team_name, player_lookup) if player_lookup else hr_player_nickname
@@ -249,6 +256,7 @@ def scrape_game_detail(url, team_name, player_lookup=None, teams_info=None):
         'bottom_inning_score_9': bottom_inning_score_9,
         'win_pitcher': win_pitcher,
         'lose_pitcher': lose_pitcher,
+        'save_pitcher': save_pitcher,
         'hr_player': hr_player
     }
 
@@ -338,7 +346,7 @@ def save_to_csv(games, output_dir='output'):
         'bottom_inning_score_1', 'bottom_inning_score_2', 'bottom_inning_score_3',
         'bottom_inning_score_4', 'bottom_inning_score_5', 'bottom_inning_score_6',
         'bottom_inning_score_7', 'bottom_inning_score_8', 'bottom_inning_score_9',
-        'win_pitcher', 'lose_pitcher', 'hr_player'
+        'win_pitcher', 'lose_pitcher', 'save_pitcher', 'hr_player'
     ]
     
     with open(filepath, 'w', encoding='utf-8', newline='') as f:

@@ -70,6 +70,7 @@ CREATE TABLE transaction_game_info (
     bottom_inning_score_9 INTEGER,
     win_pitcher TEXT,
     lose_pitcher TEXT,
+    save_pitcher TEXT,
     hr_player TEXT,
     delete_flg INTEGER NOT NULL DEFAULT 0,
     created_dt TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,

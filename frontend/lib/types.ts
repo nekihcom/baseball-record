@@ -54,6 +54,7 @@ export interface Game {
   bottom_inning_score_9: number | null
   win_pitcher: string | null
   lose_pitcher: string | null
+  save_pitcher: string | null
   hr_player: string | null
   delete_flg: number
   created_dt: string
