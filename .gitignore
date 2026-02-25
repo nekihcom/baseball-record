@@ -45,3 +45,5 @@ Thumbs.db
 # 出力ファイル（必要に応じて）
 # output/
 # input/
+tmp
+backend/ddl/create_victoria_tables.sql
