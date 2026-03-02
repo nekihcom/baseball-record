@@ -1110,15 +1110,15 @@ function TeamHitterStatsTable({
     >
       <table className="min-w-max text-sm border-collapse">
         <thead className="bg-[#333333] text-white">
-          <tr className="border-b [&>th]:sticky [&>th]:top-0 [&>th]:z-10 [&>th]:bg-[#333333]">
+          <tr className="border-b">
             {!hideYearColumn && (
-              <th className="px-2 py-1 text-left font-semibold whitespace-nowrap">年</th>
+              <th className="px-2 py-1 text-left font-semibold whitespace-nowrap sticky top-0 left-0 z-20 bg-[#333333] w-12">年</th>
             )}
-            <th className="px-2 py-1 text-left font-semibold whitespace-nowrap">選手</th>
+            <th className={`px-2 py-1 text-left font-semibold whitespace-nowrap sticky top-0 z-20 bg-[#333333] ${hideYearColumn ? "left-0" : "left-12"}`}>選手</th>
             {HITTER_SORT_COLUMNS.map(({ key, label }) => (
               <th
                 key={key}
-                className="px-2 py-1 text-right font-semibold whitespace-nowrap cursor-pointer select-none hover:bg-[#444]"
+                className="px-2 py-1 text-right font-semibold whitespace-nowrap cursor-pointer select-none hover:bg-[#444] sticky top-0 z-10 bg-[#333333]"
                 onClick={() => handleSort(key)}
               >
                 {label}
@@ -1131,9 +1131,9 @@ function TeamHitterStatsTable({
           {sorted.map((row) => (
             <tr key={row.key} className="border-b last:border-b-0">
               {!hideYearColumn && (
-                <td className="px-2 py-1 whitespace-nowrap">{row.year ?? "—"}</td>
+                <td className="px-2 py-1 whitespace-nowrap sticky left-0 z-10 bg-background w-12">{row.year ?? "—"}</td>
               )}
-              <td className="px-2 py-1 whitespace-nowrap">
+              <td className={`px-2 py-1 whitespace-nowrap sticky z-10 bg-background ${hideYearColumn ? "left-0" : "left-12"}`}>
                 <PlayerNameCell
                   teamKey={teamKey}
                   playerNumber={row.player_number}
@@ -1271,15 +1271,15 @@ function TeamPitcherStatsTable({
     >
       <table className="min-w-max text-sm border-collapse">
         <thead className="bg-[#333333] text-white">
-          <tr className="border-b [&>th]:sticky [&>th]:top-0 [&>th]:z-10 [&>th]:bg-[#333333]">
+          <tr className="border-b">
             {!hideYearColumn && (
-              <th className="px-2 py-1 text-left font-semibold whitespace-nowrap">年</th>
+              <th className="px-2 py-1 text-left font-semibold whitespace-nowrap sticky top-0 left-0 z-20 bg-[#333333] w-12">年</th>
             )}
-            <th className="px-2 py-1 text-left font-semibold whitespace-nowrap">選手</th>
+            <th className={`px-2 py-1 text-left font-semibold whitespace-nowrap sticky top-0 z-20 bg-[#333333] ${hideYearColumn ? "left-0" : "left-12"}`}>選手</th>
             {PITCHER_SORT_COLUMNS.map(({ key, label }) => (
               <th
                 key={key}
-                className="px-2 py-1 text-right font-semibold whitespace-nowrap cursor-pointer select-none hover:bg-[#444]"
+                className="px-2 py-1 text-right font-semibold whitespace-nowrap cursor-pointer select-none hover:bg-[#444] sticky top-0 z-10 bg-[#333333]"
                 onClick={() => handleSort(key)}
               >
                 {label}
@@ -1292,9 +1292,9 @@ function TeamPitcherStatsTable({
           {sorted.map((row) => (
             <tr key={row.key} className="border-b last:border-b-0">
               {!hideYearColumn && (
-                <td className="px-2 py-1 whitespace-nowrap">{row.year ?? "—"}</td>
+                <td className="px-2 py-1 whitespace-nowrap sticky left-0 z-10 bg-background w-12">{row.year ?? "—"}</td>
               )}
-              <td className="px-2 py-1 whitespace-nowrap">
+              <td className={`px-2 py-1 whitespace-nowrap sticky z-10 bg-background ${hideYearColumn ? "left-0" : "left-12"}`}>
                 <PlayerNameCell
                   teamKey={teamKey}
                   playerNumber={row.player_number}

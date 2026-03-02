@@ -441,8 +441,8 @@ export default function GameDetailPage({ params }: Props) {
               <table className="min-w-max text-sm border-collapse">
                 <thead className="bg-[#333333] text-white">
                   <tr className="border-b">
-                    <th className="px-2 py-1 text-center font-semibold align-middle"><VerticalText text="守備" /></th>
-                    <th className="px-2 py-1 text-center font-semibold align-middle min-w-[80px]"><VerticalText text="選手名" /></th>
+                    <th className="px-2 py-1 text-center font-semibold align-middle sticky left-0 z-20 bg-[#333333] w-10"><VerticalText text="守備" /></th>
+                    <th className="px-2 py-1 text-center font-semibold align-middle min-w-[80px] sticky left-10 z-20 bg-[#333333]"><VerticalText text="選手名" /></th>
                     <th className="px-2 py-1 text-center font-semibold"><VerticalText text="打席" /></th>
                     <th className="px-2 py-1 text-center font-semibold"><VerticalText text="打数" /></th>
                     <th className="px-2 py-1 text-center font-semibold"><VerticalText text="安打" /></th>
@@ -475,8 +475,8 @@ export default function GameDetailPage({ params }: Props) {
                   ) : (
                     hitterStats.map((stat) => (
                       <tr key={stat.key} className="border-b last:border-b-0">
-                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle">{stat.position || "—"}</td>
-                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle min-w-[80px]">
+                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle sticky left-0 z-10 bg-background w-10">{stat.position || "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle min-w-[80px] sticky left-10 z-10 bg-background">
                         {stat.team != null && stat.player_number != null ? (
                           <Link
                             href={`/team/${stat.team}/player/${stat.player_number}`}
@@ -521,8 +521,8 @@ export default function GameDetailPage({ params }: Props) {
               <table className="min-w-max text-sm border-collapse">
                 <thead className="bg-[#333333] text-white">
                   <tr className="border-b">
-                    <th className="px-2 py-1 text-center font-semibold align-middle w-10"><VerticalText text="結果" /></th>
-                    <th className="px-2 py-1 text-center font-semibold align-middle min-w-[100px]"><VerticalText text="選手名" /></th>
+                    <th className="px-2 py-1 text-center font-semibold align-middle w-10 sticky left-0 z-20 bg-[#333333]"><VerticalText text="結果" /></th>
+                    <th className="px-2 py-1 text-center font-semibold align-middle min-w-[100px] sticky left-10 z-20 bg-[#333333]"><VerticalText text="選手名" /></th>
                     <th className="px-2 py-1 text-center font-semibold"><VerticalText text="投球回" /></th>
                     <th className="px-2 py-1 text-center font-semibold"><VerticalText text="球数" /></th>
                     <th className="px-2 py-1 text-center font-semibold"><VerticalText text="失点" /></th>
@@ -546,8 +546,8 @@ export default function GameDetailPage({ params }: Props) {
                   ) : (
                     pitcherStats.map((stat) => (
                       <tr key={stat.key} className="border-b last:border-b-0">
-                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle w-10">{stat.result == "-" ? "" : stat.result}</td>
-                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle min-w-[100px]">
+                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle w-10 sticky left-0 z-10 bg-background">{stat.result == "-" ? "" : stat.result}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle min-w-[100px] sticky left-10 z-10 bg-background">
                         {stat.team != null && stat.player_number != null ? (
                           <Link
                             href={`/team/${stat.team}/player/${stat.player_number}`}
