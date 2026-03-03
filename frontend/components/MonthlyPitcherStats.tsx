@@ -71,7 +71,7 @@ export function MonthlyPitcherStats({ stats }: Props) {
   return (
     <div className="w-full overflow-x-auto">
       <table className="min-w-max text-sm border-collapse">
-        <thead className="bg-[#333333] text-white">
+        <thead className="bg-[#2e7d32] text-white">
           <tr className="border-b">
             <th className="px-2 py-1 text-left font-semibold whitespace-nowrap">月</th>
             <th className="px-2 py-1 text-right font-semibold whitespace-nowrap">防御率</th>

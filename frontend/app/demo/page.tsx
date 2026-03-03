@@ -334,13 +334,13 @@ export default function DemoTabsPage() {
                 <TabsList variant="line" className="w-full">
                   <TabsTrigger
                     value="hitter"
-                    className="flex-1 after:opacity-100 data-[state=active]:bg-[#333333] data-[state=active]:text-white data-[state=active]:after:opacity-0"
+                    className="flex-1 after:opacity-100 data-[state=active]:bg-[#2e7d32] data-[state=active]:text-white data-[state=active]:after:opacity-0"
                   >
                     打者成績
                   </TabsTrigger>
                   <TabsTrigger
                     value="pitcher"
-                    className="flex-1 after:opacity-100 data-[state=active]:bg-[#333333] data-[state=active]:text-white data-[state=active]:after:opacity-0"
+                    className="flex-1 after:opacity-100 data-[state=active]:bg-[#2e7d32] data-[state=active]:text-white data-[state=active]:after:opacity-0"
                   >
                     投手成績
                   </TabsTrigger>
@@ -358,13 +358,13 @@ export default function DemoTabsPage() {
                 <TabsList variant="line" className="w-full">
                   <TabsTrigger
                     value="hitter"
-                    className="flex-1 after:opacity-100 data-[state=active]:bg-[#333333] data-[state=active]:text-white data-[state=active]:after:opacity-0"
+                    className="flex-1 after:opacity-100 data-[state=active]:bg-[#2e7d32] data-[state=active]:text-white data-[state=active]:after:opacity-0"
                   >
                     打者成績
                   </TabsTrigger>
                   <TabsTrigger
                     value="pitcher"
-                    className="flex-1 after:opacity-100 data-[state=active]:bg-[#333333] data-[state=active]:text-white data-[state=active]:after:opacity-0"
+                    className="flex-1 after:opacity-100 data-[state=active]:bg-[#2e7d32] data-[state=active]:text-white data-[state=active]:after:opacity-0"
                   >
                     投手成績
                   </TabsTrigger>
