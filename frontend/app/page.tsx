@@ -92,7 +92,7 @@ export default function Home() {
                   <li>
                     <Link
                       href={`/game?team=${teamKey}`}
-                      className="text-primary hover:underline text-sm"
+                      className="text-primary text-sm hover:text-[#01154d] hover:opacity-50"
                     >
                       試合結果
                     </Link>
@@ -100,7 +100,7 @@ export default function Home() {
                   <li>
                     <Link
                       href={`/team/${teamKey}/stats`}
-                      className="text-primary hover:underline text-sm"
+                      className="text-primary text-sm hover:text-[#01154d] hover:opacity-50"
                     >
                       チーム成績
                     </Link>
@@ -108,7 +108,7 @@ export default function Home() {
                   <li>
                     <Link
                       href={`/team/${teamKey}/player`}
-                      className="text-primary hover:underline text-sm"
+                      className="text-primary text-sm hover:text-[#01154d] hover:opacity-50"
                     >
                       選手一覧
                     </Link>

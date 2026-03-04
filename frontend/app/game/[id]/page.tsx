@@ -336,13 +336,13 @@ export default function GameDetailPage({ params }: Props) {
                     
           {/* 責任投手欄 */}
           <div className="my-12">
-            <div className="text-center@ text-2xl font-bold mb-1">
+            <div className="text-2xl font-bold mb-1">
               <p>責任投手</p>
             </div>
             <table className="w-full border-collapse">
               <tbody>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold" style={{ backgroundColor: '#333333' }}>勝</td>
+                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold bg-[#3b5dbc]">勝</td>
                   <td className="border border-gray-300 px-4 py-2">
                     {(() => {
                       const link = getPitcherPlayerLink(game.win_pitcher, pitcherStats);
@@ -358,7 +358,7 @@ export default function GameDetailPage({ params }: Props) {
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold" style={{ backgroundColor: '#333333' }}>負</td>
+                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold bg-[#3b5dbc]">負</td>
                   <td className="border border-gray-300 px-4 py-2">
                     {(() => {
                       const link = getPitcherPlayerLink(game.lose_pitcher, pitcherStats);
@@ -374,7 +374,7 @@ export default function GameDetailPage({ params }: Props) {
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold" style={{ backgroundColor: '#333333' }}>S</td>
+                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold bg-[#3b5dbc]">S</td>
                   <td className="border border-gray-300 px-4 py-2">
                     {game.save_pitcher ? (
                       (() => {
@@ -394,7 +394,7 @@ export default function GameDetailPage({ params }: Props) {
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold" style={{ backgroundColor: '#333333' }}>HR</td>
+                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold bg-[#3b5dbc]">HR</td>
                   <td className="border border-gray-300 px-4 py-2">
                     {(() => {
                       const link = getHitterPlayerLink(game.hr_player, hitterStats);
