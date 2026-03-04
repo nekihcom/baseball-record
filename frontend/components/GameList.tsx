@@ -511,7 +511,7 @@ export function GameList() {
                   <div key={dateKey}>
                     {/* 月のヘッダー */}
                     {showMonthHeader && (
-                      <div className="w-full bg-[#2e7d32] text-white text-lg font-bold mb-3 pt-2 pb-2 px-4 rounded">
+                      <div className="w-full bg-[#3b5dbc] text-white text-lg font-bold mb-3 pt-2 pb-2 px-4 rounded">
                         {currentMonth}月
                       </div>
                     )}
@@ -615,7 +615,7 @@ export function GameList() {
                 return (
                   <div key={monthKey}>
                     {/* 月のヘッダー */}
-                    <div className="w-full bg-[#2e7d32] text-white text-lg font-bold mb-4 pt-2 pb-2 px-4 rounded">
+                    <div className="w-full bg-[#3b5dbc] text-white text-lg font-bold mb-4 pt-2 pb-2 px-4 rounded">
                       {month}月
                     </div>
                     

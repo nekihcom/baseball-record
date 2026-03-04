@@ -82,7 +82,7 @@ export function UsagePitcherStats({ stats }: Props) {
   return (
     <div className="w-full overflow-x-auto">
       <table className="min-w-max text-sm border-collapse">
-        <thead className="bg-[#2e7d32] text-white">
+        <thead className="bg-[#3b5dbc] text-white">
           <tr className="border-b">
             <th className="px-2 py-1 text-left font-semibold whitespace-nowrap">
               起用法

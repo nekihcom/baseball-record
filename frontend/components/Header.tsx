@@ -63,7 +63,7 @@ export function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-[#2e7d32]">
+    <header className="sticky top-0 z-50 bg-[#01154d]">
       <div className="container mx-auto max-w-[1024px] px-4">
         <nav className="flex items-center justify-between py-4">
           {/* ロゴ */}
@@ -78,7 +78,7 @@ export function Header() {
           {/* ハンバーガーボタン */}
           <button
             type="button"
-            className="p-2 rounded-md text-white hover:bg-[#1b5e20] focus:outline-none focus:ring-2 focus:ring-white/50"
+            className="p-2 rounded-md text-white hover:bg-[#000e3a] focus:outline-none focus:ring-2 focus:ring-white/50"
             onClick={toggleMenu}
             aria-label="メニューを開く"
             aria-expanded={isMenuOpen}

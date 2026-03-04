@@ -88,7 +88,7 @@ function CurrentYearTeamSummaryTable({
   return (
     <div className="w-full overflow-x-auto">
       <table className="min-w-max text-sm border-collapse">
-        <thead className="bg-[#2e7d32] text-white">
+        <thead className="bg-[#3b5dbc] text-white">
           <tr className="border-b">
             <th className="px-2 py-1 text-left font-semibold whitespace-nowrap">年</th>
             <th className="px-2 py-1 text-right font-semibold whitespace-nowrap">試合</th>
@@ -171,7 +171,7 @@ function Last3GamesTable({
       <h3 className="text-sm font-semibold mb-2">直近3試合の成績</h3>
       <div className="w-full overflow-x-auto">
         <table className="min-w-max text-sm border-collapse">
-          <thead className="bg-[#2e7d32] text-white">
+          <thead className="bg-[#3b5dbc] text-white">
             <tr className="border-b">
               <th className="px-2 py-1 text-left font-semibold whitespace-nowrap">日付</th>
               <th className="px-2 py-1 text-left font-semibold whitespace-nowrap">グラウンド</th>
@@ -217,7 +217,7 @@ function MonthlyStatsSection({ monthlyStats = [] }: { monthlyStats?: MonthlyTeam
       <h3 className="text-sm font-semibold mb-2">月別成績</h3>
       <div className="w-full overflow-x-auto">
         <table className="min-w-max text-sm border-collapse">
-          <thead className="bg-[#2e7d32] text-white">
+          <thead className="bg-[#3b5dbc] text-white">
             <tr className="border-b">
               <th className="px-2 py-1 text-left font-semibold whitespace-nowrap">月</th>
               <th className="px-2 py-1 text-right font-semibold whitespace-nowrap">試合数</th>
@@ -269,7 +269,7 @@ function CareerTeamSummaryTable({
   return (
     <div className="w-full overflow-x-auto">
       <table className="min-w-max text-sm border-collapse">
-        <thead className="bg-[#2e7d32] text-white">
+        <thead className="bg-[#3b5dbc] text-white">
           <tr className="border-b">
             <th className="px-2 py-1 text-left font-semibold whitespace-nowrap">年</th>
             <th className="px-2 py-1 text-right font-semibold whitespace-nowrap">試合</th>
@@ -375,7 +375,7 @@ function BattingLeaderBlock({
       <h3 className="text-sm font-semibold mb-2">首位打者</h3>
       <div className="w-full overflow-x-auto">
         <table className="min-w-max text-sm border-collapse lg:w-full">
-          <thead className="bg-[#2e7d32] text-white">
+          <thead className="bg-[#3b5dbc] text-white">
             <tr className="border-b">
               <th className="w-8 px-2 py-1 text-center font-semibold whitespace-nowrap">順位</th>
               <th className="w-20 px-2 py-1 text-left font-semibold whitespace-nowrap">選手</th>
@@ -517,7 +517,7 @@ function SimplePitcherTitleRanking({
         <h3 className="text-sm font-semibold mb-2">{title}</h3>
         <div className="w-full overflow-x-auto">
           <table className="min-w-max text-sm border-collapse lg:w-full">
-            <thead className="bg-[#2e7d32] text-white">
+            <thead className="bg-[#3b5dbc] text-white">
               <tr className="border-b">
                 <th className="w-8 px-2 py-1 text-center font-semibold whitespace-nowrap">順位</th>
                 <th className="w-20 px-2 py-1 text-left font-semibold whitespace-nowrap">選手</th>
@@ -864,7 +864,7 @@ function SimpleTitleRanking({
       <h3 className="text-sm font-semibold mb-2">{title}</h3>
       <div className="w-full overflow-x-auto">
         <table className="min-w-max text-sm border-collapse lg:w-full">
-          <thead className="bg-[#2e7d32] text-white">
+          <thead className="bg-[#3b5dbc] text-white">
             <tr className="border-b">
               <th className="w-8 px-2 py-1 text-center font-semibold whitespace-nowrap">順位</th>
               <th className="w-20 px-2 py-1 text-left font-semibold whitespace-nowrap">選手</th>
@@ -996,16 +996,16 @@ function TeamHitterStatsTable({
       }
     >
       <table className="min-w-max text-sm border-collapse">
-        <thead className="bg-[#2e7d32] text-white">
+        <thead className="bg-[#3b5dbc] text-white">
           <tr className="border-b">
             {!hideYearColumn && (
-              <th className="px-2 py-1 text-left font-semibold whitespace-nowrap sticky top-0 left-0 z-20 bg-[#2e7d32] w-12">年</th>
+              <th className="px-2 py-1 text-left font-semibold whitespace-nowrap sticky top-0 left-0 z-20 bg-[#3b5dbc] w-12">年</th>
             )}
-            <th className={`px-2 py-1 text-left font-semibold whitespace-nowrap sticky top-0 z-20 bg-[#2e7d32] ${hideYearColumn ? "left-0" : "left-12"}`}>選手</th>
+            <th className={`px-2 py-1 text-left font-semibold whitespace-nowrap sticky top-0 z-20 bg-[#3b5dbc] ${hideYearColumn ? "left-0" : "left-12"}`}>選手</th>
             {HITTER_SORT_COLUMNS.map(({ key, label }) => (
               <th
                 key={key}
-                className="px-2 py-1 text-right font-semibold whitespace-nowrap cursor-pointer select-none hover:bg-[#1b5e20] sticky top-0 z-10 bg-[#2e7d32]"
+                className="px-2 py-1 text-right font-semibold whitespace-nowrap cursor-pointer select-none hover:bg-[#2a4aad] sticky top-0 z-10 bg-[#3b5dbc]"
                 onClick={() => handleSort(key)}
               >
                 {label}
@@ -1157,16 +1157,16 @@ function TeamPitcherStatsTable({
       }
     >
       <table className="min-w-max text-sm border-collapse">
-        <thead className="bg-[#2e7d32] text-white">
+        <thead className="bg-[#3b5dbc] text-white">
           <tr className="border-b">
             {!hideYearColumn && (
-              <th className="px-2 py-1 text-left font-semibold whitespace-nowrap sticky top-0 left-0 z-20 bg-[#2e7d32] w-12">年</th>
+              <th className="px-2 py-1 text-left font-semibold whitespace-nowrap sticky top-0 left-0 z-20 bg-[#3b5dbc] w-12">年</th>
             )}
-            <th className={`px-2 py-1 text-left font-semibold whitespace-nowrap sticky top-0 z-20 bg-[#2e7d32] ${hideYearColumn ? "left-0" : "left-12"}`}>選手</th>
+            <th className={`px-2 py-1 text-left font-semibold whitespace-nowrap sticky top-0 z-20 bg-[#3b5dbc] ${hideYearColumn ? "left-0" : "left-12"}`}>選手</th>
             {PITCHER_SORT_COLUMNS.map(({ key, label }) => (
               <th
                 key={key}
-                className="px-2 py-1 text-right font-semibold whitespace-nowrap cursor-pointer select-none hover:bg-[#1b5e20] sticky top-0 z-10 bg-[#2e7d32]"
+                className="px-2 py-1 text-right font-semibold whitespace-nowrap cursor-pointer select-none hover:bg-[#2a4aad] sticky top-0 z-10 bg-[#3b5dbc]"
                 onClick={() => handleSort(key)}
               >
                 {label}
