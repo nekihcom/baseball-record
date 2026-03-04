@@ -63,13 +63,13 @@ export function Header() {
   ];
 
   return (
-    <header className="border-b sticky top-0 z-50 bg-background">
+    <header className="sticky top-0 z-50 bg-[#01154d]">
       <div className="container mx-auto max-w-[1024px] px-4">
         <nav className="flex items-center justify-between py-4">
           {/* ロゴ */}
           <Link
             href="/"
-            className="text-xl font-bold"
+            className="text-xl font-bold text-white"
             onClick={closeMenu}
           >
             （仮称）草野球レポート
@@ -78,7 +78,7 @@ export function Header() {
           {/* ハンバーガーボタン */}
           <button
             type="button"
-            className="p-2 rounded-md hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring"
+            className="p-2 rounded-md text-white hover:bg-[#000e3a] focus:outline-none focus:ring-2 focus:ring-white/50"
             onClick={toggleMenu}
             aria-label="メニューを開く"
             aria-expanded={isMenuOpen}
@@ -108,7 +108,7 @@ export function Header() {
             isMenuOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
           )}
         >
-          <div className="pb-4 space-y-1">
+          <div className="pb-3 pt-1 space-y-1 bg-white rounded-lg shadow-lg text-foreground mb-3 px-2">
             {navItems.map((item) => (
               <Button
                 key={item.href}

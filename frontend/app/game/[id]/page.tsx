@@ -287,9 +287,9 @@ export default function GameDetailPage({ params }: Props) {
         <CardContent className="px-0">
           <div className="w-full overflow-x-auto">
             <table className="min-w-max text-sm border-collapse">
-              <thead className="bg-[#333333] text-white">
+              <thead className="bg-[#3b5dbc] text-white">
                 <tr className="border-b">
-                  <th className="sticky left-0 z-10 bg-[#333333] px-2 py-1 text-left font-semibold whitespace-nowrap">
+                  <th className="sticky left-0 z-10 bg-[#3b5dbc] px-2 py-1 text-left font-semibold whitespace-nowrap">
                     チーム
                   </th>
                   {[1, 2, 3, 4, 5, 6, 7].map((inning) => (
@@ -336,13 +336,13 @@ export default function GameDetailPage({ params }: Props) {
                     
           {/* 責任投手欄 */}
           <div className="my-12">
-            <div className="text-center@ text-2xl font-bold mb-1">
+            <div className="text-2xl font-bold mb-1">
               <p>責任投手</p>
             </div>
             <table className="w-full border-collapse">
               <tbody>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold" style={{ backgroundColor: '#333333' }}>勝</td>
+                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold bg-[#3b5dbc]">勝</td>
                   <td className="border border-gray-300 px-4 py-2">
                     {(() => {
                       const link = getPitcherPlayerLink(game.win_pitcher, pitcherStats);
@@ -358,7 +358,7 @@ export default function GameDetailPage({ params }: Props) {
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold" style={{ backgroundColor: '#333333' }}>負</td>
+                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold bg-[#3b5dbc]">負</td>
                   <td className="border border-gray-300 px-4 py-2">
                     {(() => {
                       const link = getPitcherPlayerLink(game.lose_pitcher, pitcherStats);
@@ -374,7 +374,7 @@ export default function GameDetailPage({ params }: Props) {
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold" style={{ backgroundColor: '#333333' }}>S</td>
+                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold bg-[#3b5dbc]">S</td>
                   <td className="border border-gray-300 px-4 py-2">
                     {game.save_pitcher ? (
                       (() => {
@@ -394,7 +394,7 @@ export default function GameDetailPage({ params }: Props) {
                   </td>
                 </tr>
                 <tr>
-                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold" style={{ backgroundColor: '#333333' }}>HR</td>
+                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold bg-[#3b5dbc]">HR</td>
                   <td className="border border-gray-300 px-4 py-2">
                     {(() => {
                       const link = getHitterPlayerLink(game.hr_player, hitterStats);
@@ -439,10 +439,10 @@ export default function GameDetailPage({ params }: Props) {
             <TabsContent value="hitter" className="mt-4">
             <div className="w-full overflow-x-auto">
               <table className="min-w-max text-sm border-collapse">
-                <thead className="bg-[#333333] text-white">
+                <thead className="bg-[#3b5dbc] text-white">
                   <tr className="border-b">
-                    <th className="px-2 py-1 text-center font-semibold align-middle sticky left-0 z-20 bg-[#333333] w-10"><VerticalText text="守備" /></th>
-                    <th className="px-2 py-1 text-center font-semibold align-middle min-w-[80px] sticky left-10 z-20 bg-[#333333]"><VerticalText text="選手名" /></th>
+                    <th className="px-2 py-1 text-center font-semibold align-middle sticky left-0 z-20 bg-[#3b5dbc] w-10"><VerticalText text="守備" /></th>
+                    <th className="px-2 py-1 text-center font-semibold align-middle min-w-[80px] sticky left-10 z-20 bg-[#3b5dbc]"><VerticalText text="選手名" /></th>
                     <th className="px-2 py-1 text-center font-semibold"><VerticalText text="打席" /></th>
                     <th className="px-2 py-1 text-center font-semibold"><VerticalText text="打数" /></th>
                     <th className="px-2 py-1 text-center font-semibold"><VerticalText text="安打" /></th>
@@ -519,10 +519,10 @@ export default function GameDetailPage({ params }: Props) {
             <TabsContent value="pitcher" className="mt-4">
             <div className="w-full overflow-x-auto">
               <table className="min-w-max text-sm border-collapse">
-                <thead className="bg-[#333333] text-white">
+                <thead className="bg-[#3b5dbc] text-white">
                   <tr className="border-b">
-                    <th className="px-2 py-1 text-center font-semibold align-middle w-10 sticky left-0 z-20 bg-[#333333]"><VerticalText text="結果" /></th>
-                    <th className="px-2 py-1 text-center font-semibold align-middle min-w-[100px] sticky left-10 z-20 bg-[#333333]"><VerticalText text="選手名" /></th>
+                    <th className="px-2 py-1 text-center font-semibold align-middle w-10 sticky left-0 z-20 bg-[#3b5dbc]"><VerticalText text="結果" /></th>
+                    <th className="px-2 py-1 text-center font-semibold align-middle min-w-[100px] sticky left-10 z-20 bg-[#3b5dbc]"><VerticalText text="選手名" /></th>
                     <th className="px-2 py-1 text-center font-semibold"><VerticalText text="投球回" /></th>
                     <th className="px-2 py-1 text-center font-semibold"><VerticalText text="球数" /></th>
                     <th className="px-2 py-1 text-center font-semibold"><VerticalText text="失点" /></th>

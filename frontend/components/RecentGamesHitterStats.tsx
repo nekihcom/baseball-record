@@ -24,7 +24,7 @@ export function RecentGamesHitterStats({
   return (
     <div className="w-full overflow-x-auto">
       <table className="min-w-max text-sm border-collapse">
-        <thead className="bg-[#333333] text-white">
+        <thead className="bg-[#3b5dbc] text-white">
           <tr className="border-b">
             <th className="px-2 py-1 text-left font-semibold whitespace-nowrap">日付</th>
             <th className="px-2 py-1 text-right font-semibold whitespace-nowrap">打順</th>
