@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 interface PageLayoutProps {
   headerContent?: ReactNode;
@@ -16,14 +15,14 @@ export function PageLayout({
 }: PageLayoutProps) {
   return (
     <div className="space-y-4">
-      <Card className="border-none shadow-none py-0">
+      <div>
         {headerContent && (
-          <CardHeader className={`px-0 ${headerClassName}`}>
+          <div className={`px-0 ${headerClassName}`}>
             <div className="py-4 border-b">{headerContent}</div>
-          </CardHeader>
+          </div>
         )}
-        <CardContent className={`px-0 ${contentClassName}`}>{children}</CardContent>
-      </Card>
+        <div className={`px-0 ${contentClassName}`}>{children}</div>
+      </div>
     </div>
   );
 }

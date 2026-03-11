@@ -60,7 +60,7 @@ function PlayerNameCell({
     return (
       <Link
         href={`/team/${teamKey}/player/${playerNumber}`}
-        className="text-primary hover:underline"
+        className="underline underline-offset-2 hover:opacity-70"
       >
         {displayText || "—"}
       </Link>
@@ -1018,9 +1018,9 @@ function TeamHitterStatsTable({
           {sorted.map((row) => (
             <tr key={row.key} className="border-b last:border-b-0">
               {!hideYearColumn && (
-                <td className="px-2 py-1 whitespace-nowrap sticky left-0 z-10 bg-background w-12">{row.year ?? "—"}</td>
+                <td className="px-2 py-1 whitespace-nowrap sticky left-0 z-10 bg-[#0f1524] w-12">{row.year ?? "—"}</td>
               )}
-              <td className={`px-2 py-1 whitespace-nowrap sticky z-10 bg-background ${hideYearColumn ? "left-0" : "left-12"}`}>
+              <td className={`px-2 py-1 whitespace-nowrap sticky z-10 bg-[#0f1524] ${hideYearColumn ? "left-0" : "left-12"}`}>
                 <PlayerNameCell
                   teamKey={teamKey}
                   playerNumber={row.player_number}
@@ -1179,9 +1179,9 @@ function TeamPitcherStatsTable({
           {sorted.map((row) => (
             <tr key={row.key} className="border-b last:border-b-0">
               {!hideYearColumn && (
-                <td className="px-2 py-1 whitespace-nowrap sticky left-0 z-10 bg-background w-12">{row.year ?? "—"}</td>
+                <td className="px-2 py-1 whitespace-nowrap sticky left-0 z-10 bg-[#0f1524] w-12">{row.year ?? "—"}</td>
               )}
-              <td className={`px-2 py-1 whitespace-nowrap sticky z-10 bg-background ${hideYearColumn ? "left-0" : "left-12"}`}>
+              <td className={`px-2 py-1 whitespace-nowrap sticky z-10 bg-[#0f1524] ${hideYearColumn ? "left-0" : "left-12"}`}>
                 <PlayerNameCell
                   teamKey={teamKey}
                   playerNumber={row.player_number}

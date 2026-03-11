@@ -96,7 +96,7 @@ export default function Home() {
   return (
     <div className="space-y-6">
       {/* セクションヘッダー */}
-      <div className="animate-fade-slide-up animate-stagger-1">
+      <div className="animate-fade-slide-up animate-stagger-1 mt-4">
         <h2
           className="font-sport text-2xl font-bold mb-1"
           style={{ color: "#f1f5f9", fontFamily: "var(--font-oswald), sans-serif", letterSpacing: "0.06em" }}
