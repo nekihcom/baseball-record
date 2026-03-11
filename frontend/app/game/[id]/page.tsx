@@ -246,8 +246,8 @@ export default function GameDetailPage({ params }: Props) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-base text-muted-foreground">読み込み中...</p>
+          <div className="sport-spinner" />
+          <p style={{ color: "#64748b", fontSize: "0.875rem" }}>読み込み中...</p>
         </div>
       </div>
     );
@@ -255,11 +255,9 @@ export default function GameDetailPage({ params }: Props) {
 
   if (error || !game) {
     return (
-      <Card>
-        <CardContent className="pt-6">
-          <p className="text-destructive">{error || "試合データが見つかりませんでした"}</p>
-        </CardContent>
-      </Card>
+      <div className="p-4 rounded-xl" style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", color: "#ef4444" }}>
+        {error || "試合データが見つかりませんでした"}
+      </div>
     );
   }
 
@@ -269,15 +267,18 @@ export default function GameDetailPage({ params }: Props) {
   return (
     <div className="space-y-6">
       {/* 試合概要 */}
-      <div className="text-[#333333] px-0 py-3 rounded">
+      <div className="px-0 py-3 animate-fade-slide-up animate-stagger-1">
         <div className="flex items-center justify-between">
-          <div className="flex-1 @text-center">
-            <div className="text-3xl font-bold mb-1">
+          <div className="flex-1">
+            <div
+              className="font-sport text-2xl font-bold mb-1"
+              style={{ color: "#f1f5f9", fontFamily: "var(--font-oswald), sans-serif", letterSpacing: "0.04em" }}
+            >
               {getDisplayTeamName(game.top_team, null)} VS {getDisplayTeamName(game.bottom_team, null)}
             </div>
-            <div className="flex items-center gap-2 w-fit">
-              <p className="text-sm text-gray-500">{formatGameDate(game.date)} {game.start_time || ""}</p>
-              <p className="text-sm text-gray-500">{game.place || ""}</p>
+            <div className="flex items-center gap-2 flex-wrap">
+              <p style={{ color: "#64748b", fontSize: "0.875rem" }}>{formatGameDate(game.date)} {game.start_time || ""}</p>
+              <p style={{ color: "#64748b", fontSize: "0.875rem" }}>{game.place || ""}</p>
             </div>
           </div>
         </div>
@@ -431,8 +432,8 @@ export default function GameDetailPage({ params }: Props) {
           {statsLoading ? (
             <div className="flex items-center justify-center min-h-[200px] mt-4">
               <div className="flex flex-col items-center gap-4">
-                <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                <p className="text-sm text-muted-foreground">読み込み中...</p>
+                <div className="sport-spinner" />
+                <p style={{ color: "#64748b", fontSize: "0.875rem" }}>読み込み中...</p>
               </div>
             </div>
           ) : statsType === "hitter" ? (

@@ -2,11 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Player, Team } from "@/lib/types";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageLayout } from "@/components/PageLayout";
 import { useBreadcrumb } from "@/components/BreadcrumbContext";
 
@@ -35,7 +33,6 @@ export default function TeamPlayersPage({ params }: Props) {
     if (teamInfo) {
       const teamName = teamInfo.team_name ?? teamInfo.team ?? teamKey ?? "—";
       setBreadcrumbSegments([
-        // パンくず: TOP > チーム名 > 選手一覧
         { label: teamName, href: `/team/${teamKey}/stats` },
         { label: "選手一覧" },
       ]);
@@ -97,8 +94,8 @@ export default function TeamPlayersPage({ params }: Props) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-base text-muted-foreground">読み込み中...</p>
+          <div className="sport-spinner" />
+          <p style={{ color: "#64748b", fontSize: "0.875rem" }}>読み込み中...</p>
         </div>
       </div>
     );
@@ -107,71 +104,126 @@ export default function TeamPlayersPage({ params }: Props) {
   if (error || !teamInfo) {
     return (
       <div className="space-y-6">
-        <Button onClick={() => router.push("/team")} variant="outline" size="sm">
-          チーム一覧へ
-        </Button>
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-destructive">{error ?? "チームが見つかりませんでした"}</p>
-          </CardContent>
-        </Card>
+        <button
+          type="button"
+          onClick={() => router.push("/team")}
+          className="px-4 py-2 rounded-lg text-sm transition-all duration-200"
+          style={{
+            background: "rgba(255,255,255,0.05)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            color: "#94a3b8",
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(245,158,11,0.4)";
+            (e.currentTarget as HTMLButtonElement).style.color = "#f59e0b";
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.1)";
+            (e.currentTarget as HTMLButtonElement).style.color = "#94a3b8";
+          }}
+        >
+          ← チーム一覧へ
+        </button>
+        <div
+          className="p-4 rounded-xl"
+          style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", color: "#ef4444" }}
+        >
+          {error ?? "チームが見つかりませんでした"}
+        </div>
       </div>
     );
   }
 
   return (
     <PageLayout>
-      <div className="space-y-6">
-        <Card className="border-none shadow-none">
-          <CardHeader className="px-0">
-            <CardTitle className="text-2xl">
+      <div className="space-y-6 p-4">
+        {/* チーム名ヘッダー */}
+        <div className="animate-fade-slide-up animate-stagger-1">
+          <div className="section-header">
+            <h1
+              className="font-sport text-2xl font-bold"
+              style={{ color: "#f1f5f9", fontFamily: "var(--font-oswald), sans-serif", letterSpacing: "0.04em" }}
+            >
               {teamInfo.team_name ?? teamInfo.team ?? teamKey ?? "—"}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-0 pt-4">
+            </h1>
+          </div>
+          <p style={{ color: "#64748b", fontSize: "0.875rem", marginTop: "4px" }}>選手一覧</p>
+        </div>
+
+        {/* 選手グリッド */}
         {players.length === 0 ? (
-          <div className="text-center py-12 text-base text-muted-foreground">
-            所属選手はいません
+          <div
+            className="text-center py-16 rounded-xl"
+            style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
+          >
+            <p style={{ color: "#64748b" }}>所属選手はいません</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {players.map((player) => {
+            {players.map((player, index) => {
               const playerHref =
                 player.player_number != null
                   ? `/team/${teamKey}/player/${player.player_number}`
                   : null;
 
-              const content = (
-                <Card className="hover:bg-muted/50 transition-colors">
-                  <CardContent className="px-6">
-                    <div className="flex items-center gap-6">
-                      <div className="min-w-10">
-                        <p className="text-3xl font-bold">
-                          {player.player_number != null ? `${player.player_number}` : "—"}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xl font-medium">
-                          {player.player_name || player.nickname || "—"}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+              const staggerClass = `animate-stagger-${Math.min(index + 2, 9)}`;
+
+              const cardContent = (
+                <div
+                  className={`sport-card animate-fade-slide-up ${staggerClass} flex items-center gap-5 px-6 py-4`}
+                  style={{ cursor: playerHref ? "pointer" : "default" }}
+                >
+                  {/* 背番号 */}
+                  <div
+                    className="font-mono-num text-4xl font-bold shrink-0"
+                    style={{
+                      color: "#f59e0b",
+                      fontFamily: "var(--font-jetbrains-mono), monospace",
+                      minWidth: "3rem",
+                      textAlign: "center",
+                      lineHeight: 1,
+                    }}
+                  >
+                    {player.player_number != null ? `${player.player_number}` : "—"}
+                  </div>
+
+                  {/* 縦線 */}
+                  <div
+                    style={{
+                      width: "1px",
+                      height: "36px",
+                      background: "rgba(245,158,11,0.2)",
+                      flexShrink: 0,
+                    }}
+                  />
+
+                  {/* 選手名 */}
+                  <div>
+                    <p
+                      className="text-base font-medium"
+                      style={{ color: "#f1f5f9", lineHeight: 1.3 }}
+                    >
+                      {player.player_name || player.nickname || "—"}
+                    </p>
+                    {player.nickname && player.player_name && player.nickname !== player.player_name && (
+                      <p style={{ color: "#64748b", fontSize: "0.75rem", marginTop: "2px" }}>
+                        {player.nickname}
+                      </p>
+                    )}
+                  </div>
+                </div>
               );
 
               return playerHref ? (
                 <Link key={player.key} href={playerHref}>
-                  {content}
+                  {cardContent}
                 </Link>
               ) : (
-                <div key={player.key}>{content}</div>
+                <div key={player.key}>{cardContent}</div>
               );
             })}
           </div>
         )}
-          </CardContent>
-        </Card>
       </div>
     </PageLayout>
   );

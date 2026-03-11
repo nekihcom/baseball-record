@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { cn, getDisplayTeamName } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import type { Team } from "@/lib/types";
@@ -34,7 +33,6 @@ export function Header() {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
     if (isMenuOpen) {
-      // メニューを閉じるときサブメニューもリセット
       setIsTeamOpen(false);
       setOpenTeamKey(null);
     }
@@ -63,28 +61,38 @@ export function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-[#01154d]">
+    <header className="sticky top-0 z-50" style={{ background: "linear-gradient(135deg, #0d1526 0%, #0a1428 60%, #0f1e35 100%)", borderBottom: "1px solid rgba(245,158,11,0.15)" }}>
       <div className="container mx-auto max-w-[1024px] px-4">
-        <nav className="flex items-center justify-between py-4">
+        <nav className="flex items-center justify-between py-3">
           {/* ロゴ */}
           <Link
             href="/"
-            className="text-xl font-bold text-white"
             onClick={closeMenu}
+            className="flex items-center gap-2 group"
           >
-            （仮称）草野球レポート
+            <span className="text-2xl">⚾</span>
+            <span
+              className="font-sport text-xl font-bold tracking-widest transition-colors duration-200 group-hover:text-amber-400"
+              style={{ color: "#f1f5f9", fontFamily: "var(--font-oswald), sans-serif", letterSpacing: "0.08em" }}
+            >
+              草野球レポート
+            </span>
           </Link>
 
           {/* ハンバーガーボタン */}
           <button
             type="button"
-            className="p-2 rounded-md text-white hover:bg-[#000e3a] focus:outline-none focus:ring-2 focus:ring-white/50"
+            className="p-2 rounded-md focus:outline-none transition-colors duration-200"
+            style={{ color: "#94a3b8" }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "#f59e0b"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "#94a3b8"; }}
             onClick={toggleMenu}
             aria-label="メニューを開く"
             aria-expanded={isMenuOpen}
           >
             <svg
-              className="w-6 h-6"
+              className="w-6 h-6 transition-transform duration-300"
+              style={{ transform: isMenuOpen ? "rotate(90deg)" : "rotate(0deg)" }}
               fill="none"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -101,39 +109,68 @@ export function Header() {
           </button>
         </nav>
 
-        {/* メニュー */}
+        {/* ドロップダウンメニュー */}
         <div
           className={cn(
             "overflow-hidden transition-all duration-300 ease-in-out",
             isMenuOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
           )}
         >
-          <div className="pb-3 pt-1 space-y-1 bg-white rounded-lg shadow-lg text-foreground mb-3 px-2">
+          <div
+            className="mb-3 rounded-xl overflow-hidden"
+            style={{
+              background: "#111827",
+              border: "1px solid rgba(245,158,11,0.15)",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.5)",
+            }}
+          >
+            {/* 通常ナビアイテム */}
             {navItems.map((item) => (
-              <Button
+              <Link
                 key={item.href}
-                asChild
-                variant="ghost"
-                className="w-full justify-start"
+                href={item.href}
                 onClick={closeMenu}
+                className="flex items-center gap-3 px-5 py-3 text-sm font-medium transition-all duration-200 border-b"
+                style={{ color: "#94a3b8", borderColor: "rgba(255,255,255,0.05)" }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLAnchorElement).style.color = "#f59e0b";
+                  (e.currentTarget as HTMLAnchorElement).style.background = "rgba(245,158,11,0.06)";
+                  (e.currentTarget as HTMLAnchorElement).style.paddingLeft = "24px";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLAnchorElement).style.color = "#94a3b8";
+                  (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
+                  (e.currentTarget as HTMLAnchorElement).style.paddingLeft = "20px";
+                }}
               >
-                <Link href={item.href}>{item.label}</Link>
-              </Button>
+                <span style={{ color: "#f59e0b", fontSize: "0.65rem" }}>▶</span>
+                {item.label}
+              </Link>
             ))}
 
             {/* チーム プルダウン */}
             <div>
-              <Button
-                variant="ghost"
-                className="w-full justify-between has-[>svg]:px-4"
+              <button
+                type="button"
+                className="flex items-center justify-between w-full px-5 py-3 text-sm font-medium transition-all duration-200"
+                style={{ color: "#94a3b8" }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.color = "#f59e0b";
+                  (e.currentTarget as HTMLButtonElement).style.background = "rgba(245,158,11,0.06)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.color = "#94a3b8";
+                  (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+                }}
                 onClick={toggleTeam}
               >
-                <span>チーム</span>
+                <span className="flex items-center gap-3">
+                  <span style={{ color: "#f59e0b", fontSize: "0.65rem" }}>▶</span>
+                  チーム
+                </span>
                 <svg
-                  className={cn(
-                    "w-4 h-4 transition-transform duration-200",
-                    isTeamOpen && "rotate-180"
-                  )}
+                  className="w-4 h-4 transition-transform duration-200"
+                  style={{ transform: isTeamOpen ? "rotate(180deg)" : "rotate(0deg)" }}
                   fill="none"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -143,7 +180,7 @@ export function Header() {
                 >
                   <path d="M19 9l-7 7-7-7" />
                 </svg>
-              </Button>
+              </button>
 
               <div
                 className={cn(
@@ -151,23 +188,30 @@ export function Header() {
                   isTeamOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
                 )}
               >
-                <div className="pl-4 space-y-1">
+                <div style={{ background: "rgba(0,0,0,0.2)" }}>
                   {teams.map((team) => {
                     const displayName = getDisplayTeamName(team.team_name, team.key);
                     const isOpen = openTeamKey === team.key;
                     return (
                       <div key={team.key}>
-                        <Button
-                          variant="ghost"
-                          className="w-full justify-between text-sm"
+                        <button
+                          type="button"
+                          className="flex items-center justify-between w-full px-8 py-2.5 text-sm transition-all duration-200"
+                          style={{ color: "#64748b" }}
+                          onMouseEnter={(e) => {
+                            (e.currentTarget as HTMLButtonElement).style.color = "#f1f5f9";
+                            (e.currentTarget as HTMLButtonElement).style.background = "rgba(245,158,11,0.04)";
+                          }}
+                          onMouseLeave={(e) => {
+                            (e.currentTarget as HTMLButtonElement).style.color = "#64748b";
+                            (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+                          }}
                           onClick={() => toggleTeamSub(team.key)}
                         >
                           <span>{displayName}</span>
                           <svg
-                            className={cn(
-                              "w-4 h-4 transition-transform duration-200",
-                              isOpen && "rotate-180"
-                            )}
+                            className="w-3 h-3 transition-transform duration-200"
+                            style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
                             fill="none"
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -177,7 +221,7 @@ export function Header() {
                           >
                             <path d="M19 9l-7 7-7-7" />
                           </svg>
-                        </Button>
+                        </button>
 
                         <div
                           className={cn(
@@ -185,27 +229,39 @@ export function Header() {
                             isOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
                           )}
                         >
-                          <div className="pl-4 space-y-1">
-                            <Button
-                              asChild
-                              variant="ghost"
-                              className="w-full justify-start text-sm"
+                          <div className="px-12 py-1 space-y-0.5" style={{ background: "rgba(0,0,0,0.15)" }}>
+                            <Link
+                              href={`/team/${team.key}/stats`}
                               onClick={closeMenu}
+                              className="flex items-center gap-2 px-3 py-2 text-xs rounded-md transition-all duration-200"
+                              style={{ color: "#64748b" }}
+                              onMouseEnter={(e) => {
+                                (e.currentTarget as HTMLAnchorElement).style.color = "#f59e0b";
+                                (e.currentTarget as HTMLAnchorElement).style.background = "rgba(245,158,11,0.08)";
+                              }}
+                              onMouseLeave={(e) => {
+                                (e.currentTarget as HTMLAnchorElement).style.color = "#64748b";
+                                (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
+                              }}
                             >
-                              <Link href={`/team/${team.key}/stats`}>
-                                チーム成績
-                              </Link>
-                            </Button>
-                            <Button
-                              asChild
-                              variant="ghost"
-                              className="w-full justify-start text-sm"
+                              チーム成績
+                            </Link>
+                            <Link
+                              href={`/team/${team.key}/player`}
                               onClick={closeMenu}
+                              className="flex items-center gap-2 px-3 py-2 text-xs rounded-md transition-all duration-200"
+                              style={{ color: "#64748b" }}
+                              onMouseEnter={(e) => {
+                                (e.currentTarget as HTMLAnchorElement).style.color = "#f59e0b";
+                                (e.currentTarget as HTMLAnchorElement).style.background = "rgba(245,158,11,0.08)";
+                              }}
+                              onMouseLeave={(e) => {
+                                (e.currentTarget as HTMLAnchorElement).style.color = "#64748b";
+                                (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
+                              }}
                             >
-                              <Link href={`/team/${team.key}/player`}>
-                                選手一覧
-                              </Link>
-                            </Button>
+                              選手一覧
+                            </Link>
                           </div>
                         </div>
                       </div>

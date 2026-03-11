@@ -343,8 +343,8 @@ export function GameList() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-base text-muted-foreground">読み込み中...</p>
+          <div className="sport-spinner" />
+          <p style={{ color: "#64748b", fontSize: "0.875rem" }}>読み込み中...</p>
         </div>
       </div>
     );
@@ -452,7 +452,7 @@ export function GameList() {
   );
 
   return (
-    <Card className="border-none shadow-none py-0">
+    <Card className="border-none shadow-none px-4">
       <CardHeader className="px-0">
         {/* 検索条件 */}
         <div className="mb-4 pb-4 border-b">

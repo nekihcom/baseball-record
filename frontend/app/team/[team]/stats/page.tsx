@@ -378,7 +378,7 @@ export default function TeamStatsPage({ params }: Props) {
 
   return (
     <div className="space-y-6">
-      <Card className="border-none shadow-none">
+      <Card className="border-none shadow-none px-4">
         <CardHeader className="px-0">
           <CardTitle className="text-2xl flex flex-wrap items-baseline gap-0">
             <span>{teamInfo.team_name ?? teamInfo.team ?? teamKey ?? "—"}</span>
