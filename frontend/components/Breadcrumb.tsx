@@ -30,6 +30,10 @@ function getDefaultPageLabel(pathname: string): string | null {
   return "ページ";
 }
 
+const separatorStyle = { color: "#f59e0b", fontSize: "0.6rem", opacity: 0.6 };
+const linkStyle = { color: "#64748b", transition: "color 0.2s ease" };
+const currentStyle = { color: "#f1f5f9", fontWeight: 500 };
+
 function BreadcrumbItem({
   label,
   href,
@@ -42,17 +46,20 @@ function BreadcrumbItem({
   if (href && !isCurrent) {
     return (
       <li>
-        <Link href={href} className="hover:text-foreground transition-colors">
+        <Link
+          href={href}
+          className="transition-colors duration-200"
+          style={linkStyle}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "#f59e0b"; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "#64748b"; }}
+        >
           {label}
         </Link>
       </li>
     );
   }
   return (
-    <li
-      className={isCurrent ? "text-foreground font-medium" : undefined}
-      aria-current={isCurrent ? "page" : undefined}
-    >
+    <li style={isCurrent ? currentStyle : undefined} aria-current={isCurrent ? "page" : undefined}>
       {label}
     </li>
   );
@@ -67,14 +74,25 @@ export function Breadcrumb() {
   // リストページではコンテキストを参照しない（前の詳細ページのパンくずが残らないようにする）
   const isListPage = pathname === "/player" || pathname === "/team" || pathname === "/game";
 
+  const containerStyle = {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    fontSize: "0.8125rem",
+    color: "#64748b",
+    flexWrap: "wrap" as const,
+    width: "fit-content",
+    marginBottom: "16px",
+  };
+
   // 動的ルートでコンテキストが設定されている場合（リストページ以外）
   if (!isListPage && ctx?.breadcrumb) {
     if (ctx.breadcrumb.type === "label") {
       return (
-        <nav aria-label="パンくず" className="mb-4">
-          <ol className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap w-fit">
+        <nav aria-label="パンくず">
+          <ol style={containerStyle}>
             <BreadcrumbItem label="トップ" href="/" />
-            <li aria-hidden="true">{" > "}</li>
+            <li aria-hidden="true" style={separatorStyle}>▶</li>
             <BreadcrumbItem label={ctx.breadcrumb.label} isCurrent />
           </ol>
         </nav>
@@ -83,13 +101,11 @@ export function Breadcrumb() {
     if (ctx.breadcrumb.type === "segments" && ctx.breadcrumb.segments.length > 0) {
       const segments = ctx.breadcrumb.segments;
       return (
-        <nav aria-label="パンくず" className="mb-4">
-          <ol className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap w-fit">
+        <nav aria-label="パンくず">
+          <ol style={containerStyle}>
             <BreadcrumbItem label="トップ" href="/" />
             {segments.flatMap((seg, i) => [
-              <li key={`sep-${i}`} aria-hidden="true">
-                {" > "}
-              </li>,
+              <li key={`sep-${i}`} aria-hidden="true" style={separatorStyle}>▶</li>,
               <BreadcrumbItem
                 key={`seg-${i}`}
                 label={seg.label}
@@ -110,13 +126,11 @@ export function Breadcrumb() {
   const pendingSegments = getPendingSegments(pathname);
   if (pendingSegments && pendingSegments.length > 0) {
     return (
-      <nav aria-label="パンくず" className="mb-4">
-        <ol className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap w-fit">
+      <nav aria-label="パンくず">
+        <ol style={containerStyle}>
           <BreadcrumbItem label="トップ" href="/" />
           {pendingSegments.flatMap((seg, i) => [
-            <li key={`sep-${i}`} aria-hidden="true">
-              {" > "}
-            </li>,
+            <li key={`sep-${i}`} aria-hidden="true" style={separatorStyle}>▶</li>,
             <BreadcrumbItem
               key={`seg-${i}`}
               label={seg.label}
@@ -134,15 +148,11 @@ export function Breadcrumb() {
   if (!pageLabel) return null;
 
   return (
-    <nav aria-label="パンくず" className="mb-4">
-      <ol className="flex items-center gap-2 text-sm text-muted-foreground w-fit">
-        <li>
-          <Link href="/" className="hover:text-foreground transition-colors">
-            トップ
-          </Link>
-        </li>
-        <li aria-hidden="true">{" > "}</li>
-        <li className="text-foreground font-medium" aria-current="page">
+    <nav aria-label="パンくず">
+      <ol style={containerStyle}>
+        <BreadcrumbItem label="トップ" href="/" />
+        <li aria-hidden="true" style={separatorStyle}>▶</li>
+        <li style={currentStyle} aria-current="page">
           {pageLabel}
         </li>
       </ol>

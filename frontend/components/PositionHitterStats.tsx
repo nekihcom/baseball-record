@@ -115,7 +115,7 @@ export function PositionHitterStats({ stats }: Props) {
   }
 
   const formatRate = (value: number | null) =>
-    value != null ? value.toFixed(3).slice(1) : "—";
+    value != null ? value.toFixed(3).replace(/^0/, "") : "—";
 
   const formatInt = (hasData: boolean, value: number | null) =>
     hasData ? (value ?? 0) : "—";
@@ -129,7 +129,7 @@ export function PositionHitterStats({ stats }: Props) {
   const formatScoringRate = (hasData: boolean, scoringAb: number | null, value: number | null) => {
     if (!hasData) return "—";
     if ((scoringAb ?? 0) === 0) return "—";
-    return value != null ? value.toFixed(3).slice(1) : "—";
+    return value != null ? value.toFixed(3).replace(/^0/, "") : "—";
   };
 
   return (

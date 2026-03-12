@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import type { Game, GameHitterStats, GamePitcherStats } from "@/lib/types";
-import { Card, CardContent } from "@/components/ui/card";
+
 import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { getDisplayTeamName } from "@/lib/utils";
@@ -246,8 +246,8 @@ export default function GameDetailPage({ params }: Props) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-base text-muted-foreground">読み込み中...</p>
+          <div className="sport-spinner" />
+          <p style={{ color: "#64748b", fontSize: "0.875rem" }}>読み込み中...</p>
         </div>
       </div>
     );
@@ -255,11 +255,9 @@ export default function GameDetailPage({ params }: Props) {
 
   if (error || !game) {
     return (
-      <Card>
-        <CardContent className="pt-6">
-          <p className="text-destructive">{error || "試合データが見つかりませんでした"}</p>
-        </CardContent>
-      </Card>
+      <div className="p-4 rounded-xl" style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", color: "#ef4444" }}>
+        {error || "試合データが見つかりませんでした"}
+      </div>
     );
   }
 
@@ -269,23 +267,25 @@ export default function GameDetailPage({ params }: Props) {
   return (
     <div className="space-y-6">
       {/* 試合概要 */}
-      <div className="text-[#333333] px-0 py-3 rounded">
+      <div className="px-0 py-3 animate-fade-slide-up animate-stagger-1">
         <div className="flex items-center justify-between">
-          <div className="flex-1 @text-center">
-            <div className="text-3xl font-bold mb-1">
+          <div className="flex-1">
+            <div
+              className="font-sport text-2xl font-bold mb-1"
+              style={{ color: "#f1f5f9", fontFamily: "var(--font-oswald), sans-serif", letterSpacing: "0.04em" }}
+            >
               {getDisplayTeamName(game.top_team, null)} VS {getDisplayTeamName(game.bottom_team, null)}
             </div>
-            <div className="flex items-center gap-2 w-fit">
-              <p className="text-sm text-gray-500">{formatGameDate(game.date)} {game.start_time || ""}</p>
-              <p className="text-sm text-gray-500">{game.place || ""}</p>
+            <div className="flex items-center gap-2 flex-wrap">
+              <p style={{ color: "#64748b", fontSize: "0.875rem" }}>{formatGameDate(game.date)} {game.start_time || ""}</p>
+              <p style={{ color: "#64748b", fontSize: "0.875rem" }}>{game.place || ""}</p>
             </div>
           </div>
         </div>
       </div>
       
-      <Card className="border-none shadow-none py-0">
-        <CardContent className="px-0">
-          <div className="w-full overflow-x-auto">
+      <div>
+        <div className="w-full overflow-x-auto">
             <table className="min-w-max text-sm border-collapse">
               <thead className="bg-[#3b5dbc] text-white">
                 <tr className="border-b">
@@ -305,7 +305,7 @@ export default function GameDetailPage({ params }: Props) {
               </thead>
               <tbody>
                 <tr className="border-b">
-                  <td className="sticky left-0 z-10 bg-background px-2 py-1 font-medium whitespace-nowrap">
+                  <td className="sticky left-0 z-10 bg-[#0f1524] px-2 py-1 font-medium whitespace-nowrap">
                     {getDisplayTeamName(game.top_team, null)}
                   </td>
                   {topInningScores.map((score, index) => (
@@ -318,7 +318,7 @@ export default function GameDetailPage({ params }: Props) {
                   </td>
                 </tr>
                 <tr className="border-b last:border-b-0">
-                  <td className="sticky left-0 z-10 bg-background px-2 py-1 font-medium whitespace-nowrap">
+                  <td className="sticky left-0 z-10 bg-[#0f1524] px-2 py-1 font-medium whitespace-nowrap">
                     {getDisplayTeamName(game.bottom_team, null)}
                   </td>
                   {bottomInningScores.map((score, index) => (
@@ -348,7 +348,7 @@ export default function GameDetailPage({ params }: Props) {
                       const link = getPitcherPlayerLink(game.win_pitcher, pitcherStats);
                       const name = cleanPitcherName(game.win_pitcher) || "";
                       return link ? (
-                        <Link href={`/team/${link.team}/player/${link.playerNumber}`} className="text-primary hover:underline">
+                        <Link href={`/team/${link.team}/player/${link.playerNumber}`} className="underline underline-offset-2 hover:opacity-70">
                           {name}
                         </Link>
                       ) : (
@@ -364,7 +364,7 @@ export default function GameDetailPage({ params }: Props) {
                       const link = getPitcherPlayerLink(game.lose_pitcher, pitcherStats);
                       const name = cleanPitcherName(game.lose_pitcher) || "";
                       return link ? (
-                        <Link href={`/team/${link.team}/player/${link.playerNumber}`} className="text-primary hover:underline">
+                        <Link href={`/team/${link.team}/player/${link.playerNumber}`} className="underline underline-offset-2 hover:opacity-70">
                           {name}
                         </Link>
                       ) : (
@@ -381,7 +381,7 @@ export default function GameDetailPage({ params }: Props) {
                         const link = getPitcherPlayerLink(game.save_pitcher, pitcherStats);
                         const name = cleanPitcherName(game.save_pitcher) || "";
                         return link ? (
-                          <Link href={`/team/${link.team}/player/${link.playerNumber}`} className="text-primary hover:underline">
+                          <Link href={`/team/${link.team}/player/${link.playerNumber}`} className="underline underline-offset-2 hover:opacity-70">
                             {name}
                           </Link>
                         ) : (
@@ -400,7 +400,7 @@ export default function GameDetailPage({ params }: Props) {
                       const link = getHitterPlayerLink(game.hr_player, hitterStats);
                       const name = game.hr_player || "";
                       return link ? (
-                        <Link href={`/team/${link.team}/player/${link.playerNumber}`} className="text-primary hover:underline">
+                        <Link href={`/team/${link.team}/player/${link.playerNumber}`} className="underline underline-offset-2 hover:opacity-70">
                           {name}
                         </Link>
                       ) : (
@@ -412,13 +412,11 @@ export default function GameDetailPage({ params }: Props) {
               </tbody>
             </table>
           </div>
-        </CardContent>
-      </Card>
+      </div>
 
       {/* 打者成績・投手成績 */}
-      <Card className="border-none shadow-none py-0">
-        <CardContent className="px-0">
-          <Tabs value={statsType} onValueChange={(v) => setStatsType(v as "hitter" | "pitcher")} className="w-full">
+      <div>
+        <Tabs value={statsType} onValueChange={(v) => setStatsType(v as "hitter" | "pitcher")} className="w-full">
             <TabsList className="w-full">
               <TabsTrigger value="hitter" className="flex-1">
                 打者成績
@@ -431,8 +429,8 @@ export default function GameDetailPage({ params }: Props) {
           {statsLoading ? (
             <div className="flex items-center justify-center min-h-[200px] mt-4">
               <div className="flex flex-col items-center gap-4">
-                <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                <p className="text-sm text-muted-foreground">読み込み中...</p>
+                <div className="sport-spinner" />
+                <p style={{ color: "#64748b", fontSize: "0.875rem" }}>読み込み中...</p>
               </div>
             </div>
           ) : statsType === "hitter" ? (
@@ -475,12 +473,12 @@ export default function GameDetailPage({ params }: Props) {
                   ) : (
                     hitterStats.map((stat) => (
                       <tr key={stat.key} className="border-b last:border-b-0">
-                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle sticky left-0 z-10 bg-background w-10">{stat.position || "—"}</td>
-                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle min-w-[80px] sticky left-10 z-10 bg-background">
+                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle sticky left-0 z-10 bg-[#0f1524] w-10">{stat.position || "—"}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle min-w-[80px] sticky left-10 z-10 bg-[#0f1524]">
                         {stat.team != null && stat.player_number != null ? (
                           <Link
                             href={`/team/${stat.team}/player/${stat.player_number}`}
-                            className="text-primary hover:underline"
+                            className="underline underline-offset-2 hover:opacity-70"
                           >
                             {stat.player || "—"}
                           </Link>
@@ -546,12 +544,12 @@ export default function GameDetailPage({ params }: Props) {
                   ) : (
                     pitcherStats.map((stat) => (
                       <tr key={stat.key} className="border-b last:border-b-0">
-                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle w-10 sticky left-0 z-10 bg-background">{stat.result == "-" ? "" : stat.result}</td>
-                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle min-w-[100px] sticky left-10 z-10 bg-background">
+                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle w-10 sticky left-0 z-10 bg-[#0f1524]">{stat.result == "-" ? "" : stat.result}</td>
+                        <td className="px-2 py-1 text-center whitespace-nowrap align-middle min-w-[100px] sticky left-10 z-10 bg-[#0f1524]">
                         {stat.team != null && stat.player_number != null ? (
                           <Link
                             href={`/team/${stat.team}/player/${stat.player_number}`}
-                            className="text-primary hover:underline"
+                            className="underline underline-offset-2 hover:opacity-70"
                           >
                             {stat.player || "—"}
                           </Link>
@@ -579,8 +577,7 @@ export default function GameDetailPage({ params }: Props) {
             </TabsContent>
           )}
         </Tabs>
-        </CardContent>
-      </Card>
+      </div>
     </div>
   );
 }
