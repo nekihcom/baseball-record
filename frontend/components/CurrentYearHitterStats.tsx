@@ -1,4 +1,5 @@
 import type { SeasonHitterStats } from "@/lib/statsTypes";
+import { StatItem } from "./StatItem";
 
 type CurrentYearHitterStatsProps = {
   stats: SeasonHitterStats | null;
@@ -12,13 +13,6 @@ export function CurrentYearHitterStats({
   if (!stats) {
     return <p className="text-sm text-muted-foreground">{emptyMessage}</p>;
   }
-
-  const StatItem = ({ label, value }: { label: string; value: string | number | null }) => (
-    <div className="flex flex-col">
-      <span className="text-xs text-muted-foreground mb-1">{label}</span>
-      <span className="text-base md:text-xl font-semibold">{value ?? "—"}</span>
-    </div>
-  );
 
   return (
     <div className="space-y-6">
