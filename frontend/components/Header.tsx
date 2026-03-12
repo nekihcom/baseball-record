@@ -69,6 +69,8 @@ export function Header() {
     setOpenTeamKey(openTeamKey === key ? null : key);
   };
 
+  const contactUrl = process.env.NEXT_PUBLIC_CONTACT_FORM_URL;
+
   const navItems = [
     { href: "/", label: "トップ" },
     { href: "/game", label: "試合結果" },
@@ -108,12 +110,12 @@ export function Header() {
             <button
               type="button"
               className="p-2 rounded-md focus:outline-none transition-colors duration-200"
-              style={{ color: "#94a3b8" }}
+              style={{ color: "rgb(241, 245, 249)" }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLButtonElement).style.color = "#f59e0b";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.color = "#94a3b8";
+                (e.currentTarget as HTMLButtonElement).style.color = "rgb(241, 245, 249)";
               }}
               onClick={toggleMenu}
               aria-label="メニューを開く"
@@ -351,6 +353,43 @@ export function Header() {
               </div>
             </div>
           </div>
+
+          {/* お問い合わせリンク */}
+          {contactUrl && (
+            <a
+              href={contactUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={closeMenu}
+              className="flex items-center gap-3 mx-3 my-3 px-4 py-3 text-sm font-semibold rounded-lg transition-all duration-200"
+              style={{
+                color: "rgb(241, 245, 249)",
+                border: "1px solid #f59e0b",
+                background: "linear-gradient(rgb(13, 21, 38) 0%, rgb(10, 20, 40) 100%)",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.color = "#f59e0b";
+                (e.currentTarget as HTMLAnchorElement).style.background = "linear-gradient(rgb(30, 42, 65) 0%, rgb(20, 35, 58) 100%)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLAnchorElement).style.color = "rgb(241, 245, 249)";
+                (e.currentTarget as HTMLAnchorElement).style.background = "linear-gradient(rgb(13, 21, 38) 0%, rgb(10, 20, 40) 100%)";
+              }}
+            >
+              <svg
+                className="w-4 h-4 shrink-0"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              お問い合わせ
+            </a>
+          )}
         </nav>
 
         {/* ドロワーフッター */}
