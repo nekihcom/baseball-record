@@ -159,7 +159,8 @@ export function Header() {
           "fixed top-0 right-0 h-full z-50 flex flex-col transition-transform duration-300 ease-in-out",
         )}
         style={{
-          width: "280px",
+          width: "30%",
+          minWidth: "300px",
           background: "linear-gradient(180deg, #0d1526 0%, #0a1428 100%)",
           borderLeft: "1px solid rgba(245,158,11,0.2)",
           boxShadow: isMenuOpen ? "-8px 0 32px rgba(0,0,0,0.6)" : "none",
