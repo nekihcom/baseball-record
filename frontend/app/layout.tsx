@@ -36,9 +36,30 @@ const notoSansJP = Noto_Sans_JP({
   preload: false,
 });
 
+const BASE_URL = "https://baseball-record-bi.vercel.app";
+const SITE_NAME = "野球記録システム";
+const DESCRIPTION = "草野球チームの試合結果・選手成績を記録・公開するシステム";
+
 export const metadata: Metadata = {
-  title: "野球記録システム",
-  description: "Supabaseに保存された野球記録データを表示",
+  metadataBase: new URL(BASE_URL),
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: DESCRIPTION,
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: DESCRIPTION,
+    url: BASE_URL,
+    locale: "ja_JP",
+  },
+  twitter: {
+    card: "summary",
+    title: SITE_NAME,
+    description: DESCRIPTION,
+  },
 };
 
 export default function RootLayout({
