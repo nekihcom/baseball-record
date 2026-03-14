@@ -1,0 +1,55 @@
+name: スクレイピング定期実行
+
+on:
+  schedule:
+    # 毎週月曜日 09:00 JST (00:00 UTC)
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+    inputs:
+      team:
+        description: "スクレイピング対象チーム（空白の場合は全チーム）"
+        required: false
+        default: ""
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v4
+
+      - name: Python セットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: backend/requirements.txt
+
+      - name: 依存パッケージインストール
+        run: pip install -r requirements.txt
+
+      - name: スクレイピング実行（全チーム）
+        if: ${{ github.event.inputs.team == '' }}
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          python3 src/00_run_all.py orcas
+          python3 src/00_run_all.py swallows-fan
+
+      - name: スクレイピング実行（指定チーム）
+        if: ${{ github.event.inputs.team != '' }}
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python3 src/00_run_all.py ${{ github.event.inputs.team }}
+
+      - name: Supabase 差分更新
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: python3 src/update_supabase.py
