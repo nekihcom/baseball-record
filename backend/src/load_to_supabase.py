@@ -3,7 +3,7 @@
 CSV を読み込み、Supabase の野球記録テーブルに投入するスクリプト。
 
 実行時カレントディレクトリはどこでも可（スクリプト配置から backend を基準にパス解決）。
-.env はプロジェクトルートまたは backend に SUPABASE_URL と SUPABASE_SERVICE_KEY を設定すること。
+.env はプロジェクトルートまたは backend に NEXT_PUBLIC_SUPABASE_URL と NEXT_PUBLIC_SUPABASE_ANON_KEY を設定すること。
 """
 
 from __future__ import annotations
@@ -250,10 +250,10 @@ def _insert_batched(client, table: str, records: list[dict]) -> int:
 
 def main() -> int:
     load_dotenv()
-    url = os.environ.get("SUPABASE_URL", "").strip()
-    key = os.environ.get("SUPABASE_SERVICE_KEY", "").strip()
+    url = os.environ.get("NEXT_PUBLIC_SUPABASE_URL", "").strip()
+    key = os.environ.get("NEXT_PUBLIC_SUPABASE_ANON_KEY", "").strip()
     if not url or not key:
-        print("SUPABASE_URL と SUPABASE_SERVICE_KEY を .env に設定してください。", file=sys.stderr)
+        print("NEXT_PUBLIC_SUPABASE_URL と NEXT_PUBLIC_SUPABASE_ANON_KEY を .env に設定してください。", file=sys.stderr)
         return 1
 
     client = create_client(url, key)
