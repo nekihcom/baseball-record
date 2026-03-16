@@ -15,10 +15,10 @@ export default function Error({ error, reset }: ErrorProps) {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
-      <h1 className="text-2xl font-bold text-black">
+      <h1 className="text-2xl font-bold text-white">
         エラーが発生しました
       </h1>
-      <p className="text-base text-gray-600">
+      <p className="text-base text-white">
         データの取得中に問題が発生しました。しばらく経ってから再試行してください。
       </p>
       <div className="flex gap-4">
