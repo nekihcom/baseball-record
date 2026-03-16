@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="max-w-2xl mx-auto py-8 px-4 space-y-8 text-sm" style={{ color: "#94a3b8", lineHeight: 1.8 }}>
+    <div className="py-8 space-y-8 text-sm" style={{ color: "#94a3b8", lineHeight: 1.8 }}>
       <h1 className="text-xl font-bold" style={{ color: "#f1f5f9" }}>利用規約</h1>
       <p style={{ color: "#64748b" }}>最終更新日: 2026年3月14日</p>
 
