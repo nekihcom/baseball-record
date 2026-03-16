@@ -82,7 +82,7 @@ export function Announcements() {
 
   return (
     <div
-      className="rounded-xl animate-fade-slide-up animate-stagger-1"
+      className="rounded-xl animate-fade-slide-up animate-stagger-1 mt-4"
       style={{
         background: "rgba(26,34,53,0.7)",
         border: "1px solid rgba(245,158,11,0.15)",

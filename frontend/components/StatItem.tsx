@@ -7,8 +7,8 @@ function useCountUp(target: number, duration: number = 1500): number {
 
   useEffect(() => {
     if (target === 0) {
-      setCount(0);
-      return;
+      const id = requestAnimationFrame(() => setCount(0));
+      return () => cancelAnimationFrame(id);
     }
 
     let rafId: number;

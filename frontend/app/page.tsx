@@ -57,10 +57,10 @@ export default function Home() {
     return (
       <>
         <Announcements />
-        <div className="space-y-6">
+        <div className="space-y-6 mt-4">
           <div className="animate-fade-slide-up animate-stagger-1">
             <h2
-              className="font-sport text-xl font-semibold mb-1"
+              className="font-sport text-2xl font-bold mb-1"
               style={{ color: "#f1f5f9", fontFamily: "var(--font-oswald), sans-serif", letterSpacing: "0.06em" }}
             >
               SELECT YOUR TEAM
@@ -82,10 +82,10 @@ export default function Home() {
     return (
       <>
         <Announcements />
-        <div className="space-y-4">
+        <div className="space-y-4 mt-4">
           <h2
-            className="font-sport text-xl"
-            style={{ color: "#f1f5f9", fontFamily: "var(--font-oswald), sans-serif" }}
+            className="font-sport text-2xl font-bold mb-1"
+            style={{ color: "#f1f5f9", fontFamily: "var(--font-oswald), sans-serif", letterSpacing: "0.06em" }}
           >
             SELECT YOUR TEAM
           </h2>
