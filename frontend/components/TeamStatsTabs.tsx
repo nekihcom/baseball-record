@@ -1267,11 +1267,6 @@ export function TeamStatsTabs({
     [careerPitcherStats]
   );
 
-  useEffect(() => {
-    if (careerTeamYears.length > 0) {
-      setCareerTeamSelectedYears([...careerTeamYears]);
-    }
-  }, [careerTeamYears]);
 
   const filteredCareerTeamStats = useMemo(() => {
     if (!careerTeamStats || careerTeamStats.length === 0) return careerTeamStats;

@@ -14,10 +14,10 @@ export default function NotFound() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">
-      <h1 className="text-2xl font-bold text-black">
+      <h1 className="text-2xl font-bold text-white">
         ページが見つかりません
       </h1>
-      <p className="text-xl text-black">
+      <p className="text-xl text-white">
         URLを間違えていませんか？
       </p>
       <Link
