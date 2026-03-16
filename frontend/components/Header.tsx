@@ -30,7 +30,6 @@ export function Header() {
     };
   }, []);
 
-  // メニューが開いているときはスクロールを禁止
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -81,8 +80,8 @@ export function Header() {
       <header
         className="sticky top-0 z-50"
         style={{
-          background: "linear-gradient(135deg, #0d1526 0%, #0a1428 60%, #0f1e35 100%)",
-          borderBottom: "1px solid rgba(245,158,11,0.15)",
+          background: "var(--bg-secondary)",
+          borderBottom: "1px solid var(--border-default)",
         }}
       >
         <div className="container mx-auto max-w-[1024px] px-4">
@@ -93,14 +92,10 @@ export function Header() {
               onClick={closeMenu}
               className="flex items-center gap-2 group"
             >
-              <span className="text-2xl">⚾</span>
+              <span className="text-xl">⚾</span>
               <span
-                className="font-sport text-xl font-bold tracking-widest transition-colors duration-200 group-hover:text-amber-400"
-                style={{
-                  color: "#f1f5f9",
-                  fontFamily: "var(--font-oswald), sans-serif",
-                  letterSpacing: "0.08em",
-                }}
+                className="text-base font-semibold tracking-wide transition-colors duration-200 group-hover:opacity-80"
+                style={{ color: "var(--text-primary)" }}
               >
                 草野球レポート
               </span>
@@ -109,20 +104,14 @@ export function Header() {
             {/* ハンバーガーボタン */}
             <button
               type="button"
-              className="p-2 rounded-md focus:outline-none transition-colors duration-200"
-              style={{ color: "rgb(241, 245, 249)" }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.color = "#f59e0b";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.color = "rgb(241, 245, 249)";
-              }}
+              className="p-2 rounded-md transition-colors duration-200 hover:opacity-70"
+              style={{ color: "var(--text-dimmed)" }}
               onClick={toggleMenu}
               aria-label="メニューを開く"
               aria-expanded={isMenuOpen}
             >
               <svg
-                className="w-6 h-6 transition-transform duration-300"
+                className="w-5 h-5 transition-transform duration-200"
                 style={{ transform: isMenuOpen ? "rotate(90deg)" : "rotate(0deg)" }}
                 fill="none"
                 strokeLinecap="round"
@@ -148,7 +137,7 @@ export function Header() {
           "fixed inset-0 z-40 transition-opacity duration-300",
           isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
-        style={{ background: "rgba(0,0,0,0.6)" }}
+        style={{ background: "rgba(0,0,0,0.5)" }}
         onClick={closeMenu}
         aria-hidden="true"
       />
@@ -159,11 +148,10 @@ export function Header() {
           "fixed top-0 right-0 h-full z-50 flex flex-col transition-transform duration-300 ease-in-out",
         )}
         style={{
-          width: "30%",
-          minWidth: "300px",
-          background: "linear-gradient(180deg, #0d1526 0%, #0a1428 100%)",
-          borderLeft: "1px solid rgba(245,158,11,0.2)",
-          boxShadow: isMenuOpen ? "-8px 0 32px rgba(0,0,0,0.6)" : "none",
+          width: "280px",
+          background: "var(--bg-secondary)",
+          borderLeft: "1px solid var(--border-default)",
+          boxShadow: isMenuOpen ? "-4px 0 24px rgba(0,0,0,0.4)" : "none",
           transform: isMenuOpen ? "translateX(0)" : "translateX(100%)",
         }}
         role="dialog"
@@ -173,29 +161,20 @@ export function Header() {
         {/* ドロワーヘッダー */}
         <div
           className="flex items-center justify-between px-5 py-4"
-          style={{ borderBottom: "1px solid rgba(245,158,11,0.15)" }}
+          style={{ borderBottom: "1px solid var(--border-default)" }}
         >
-          <span
-            className="text-sm font-semibold tracking-widest uppercase"
-            style={{ color: "#f59e0b", fontFamily: "var(--font-oswald), sans-serif" }}
-          >
-            Menu
+          <span className="text-sm font-semibold" style={{ color: "var(--text-dimmed)" }}>
+            メニュー
           </span>
           <button
             type="button"
-            className="p-1.5 rounded-md transition-colors duration-200"
-            style={{ color: "#64748b" }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.color = "#f59e0b";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.color = "#64748b";
-            }}
+            className="p-1.5 rounded-md transition-colors duration-150 hover:opacity-70"
+            style={{ color: "var(--text-muted)" }}
             onClick={closeMenu}
             aria-label="メニューを閉じる"
           >
             <svg
-              className="w-5 h-5"
+              className="w-4 h-4"
               fill="none"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -209,25 +188,19 @@ export function Header() {
         </div>
 
         {/* ナビゲーション */}
-        <nav className="flex-1 overflow-y-auto py-2">
+        <nav className="flex-1 overflow-y-auto py-1">
           {/* 通常ナビアイテム */}
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={closeMenu}
-              className="flex items-center gap-3 px-5 py-3.5 text-sm font-medium transition-all duration-200"
-              style={{ color: "#94a3b8", borderBottom: "1px solid rgba(255,255,255,0.04)" }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = "#f59e0b";
-                (e.currentTarget as HTMLAnchorElement).style.background = "rgba(245,158,11,0.06)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = "#94a3b8";
-                (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
+              className="flex items-center px-5 py-3 text-sm font-medium transition-colors duration-150 hover:opacity-80"
+              style={{
+                color: "var(--text-dimmed)",
+                borderBottom: "1px solid var(--border-default)",
               }}
             >
-              <span style={{ color: "#f59e0b", fontSize: "0.6rem" }}>▶</span>
               {item.label}
             </Link>
           ))}
@@ -236,22 +209,14 @@ export function Header() {
           <div>
             <button
               type="button"
-              className="flex items-center justify-between w-full px-5 py-3.5 text-sm font-medium transition-all duration-200"
-              style={{ color: "#94a3b8", borderBottom: "1px solid rgba(255,255,255,0.04)" }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.color = "#f59e0b";
-                (e.currentTarget as HTMLButtonElement).style.background = "rgba(245,158,11,0.06)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.color = "#94a3b8";
-                (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+              className="flex items-center justify-between w-full px-5 py-3 text-sm font-medium transition-colors duration-150 hover:opacity-80"
+              style={{
+                color: "var(--text-dimmed)",
+                borderBottom: "1px solid var(--border-default)",
               }}
               onClick={toggleTeam}
             >
-              <span className="flex items-center gap-3">
-                <span style={{ color: "#f59e0b", fontSize: "0.6rem" }}>▶</span>
-                チーム
-              </span>
+              <span>チーム</span>
               <svg
                 className="w-4 h-4 transition-transform duration-200"
                 style={{ transform: isTeamOpen ? "rotate(180deg)" : "rotate(0deg)" }}
@@ -272,7 +237,7 @@ export function Header() {
                 isTeamOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
               )}
             >
-              <div style={{ background: "rgba(0,0,0,0.2)" }}>
+              <div style={{ background: "rgba(0,0,0,0.15)" }}>
                 {teams.map((team) => {
                   const displayName = getDisplayTeamName(team.team_name, team.key);
                   const isOpen = openTeamKey === team.key;
@@ -280,16 +245,8 @@ export function Header() {
                     <div key={team.key}>
                       <button
                         type="button"
-                        className="flex items-center justify-between w-full px-8 py-2.5 text-sm transition-all duration-200"
-                        style={{ color: "#64748b" }}
-                        onMouseEnter={(e) => {
-                          (e.currentTarget as HTMLButtonElement).style.color = "#f1f5f9";
-                          (e.currentTarget as HTMLButtonElement).style.background = "rgba(245,158,11,0.04)";
-                        }}
-                        onMouseLeave={(e) => {
-                          (e.currentTarget as HTMLButtonElement).style.color = "#64748b";
-                          (e.currentTarget as HTMLButtonElement).style.background = "transparent";
-                        }}
+                        className="flex items-center justify-between w-full px-8 py-2.5 text-sm transition-colors duration-150 hover:opacity-80"
+                        style={{ color: "var(--text-muted)", borderBottom: "1px solid var(--border-default)" }}
                         onClick={() => toggleTeamSub(team.key)}
                       >
                         <span>{displayName}</span>
@@ -313,36 +270,20 @@ export function Header() {
                           isOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
                         )}
                       >
-                        <div className="px-12 py-1 space-y-0.5" style={{ background: "rgba(0,0,0,0.15)" }}>
+                        <div className="px-12 py-1 space-y-0.5" style={{ background: "rgba(0,0,0,0.1)" }}>
                           <Link
                             href={`/team/${team.key}/stats`}
                             onClick={closeMenu}
-                            className="flex items-center gap-2 px-3 py-2 text-xs rounded-md transition-all duration-200"
-                            style={{ color: "#64748b" }}
-                            onMouseEnter={(e) => {
-                              (e.currentTarget as HTMLAnchorElement).style.color = "#f59e0b";
-                              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(245,158,11,0.08)";
-                            }}
-                            onMouseLeave={(e) => {
-                              (e.currentTarget as HTMLAnchorElement).style.color = "#64748b";
-                              (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
-                            }}
+                            className="flex items-center px-3 py-2 text-xs rounded-md transition-colors duration-150 hover:opacity-80"
+                            style={{ color: "var(--text-muted)" }}
                           >
                             チーム成績
                           </Link>
                           <Link
                             href={`/team/${team.key}/player`}
                             onClick={closeMenu}
-                            className="flex items-center gap-2 px-3 py-2 text-xs rounded-md transition-all duration-200"
-                            style={{ color: "#64748b" }}
-                            onMouseEnter={(e) => {
-                              (e.currentTarget as HTMLAnchorElement).style.color = "#f59e0b";
-                              (e.currentTarget as HTMLAnchorElement).style.background = "rgba(245,158,11,0.08)";
-                            }}
-                            onMouseLeave={(e) => {
-                              (e.currentTarget as HTMLAnchorElement).style.color = "#64748b";
-                              (e.currentTarget as HTMLAnchorElement).style.background = "transparent";
-                            }}
+                            className="flex items-center px-3 py-2 text-xs rounded-md transition-colors duration-150 hover:opacity-80"
+                            style={{ color: "var(--text-muted)" }}
                           >
                             選手一覧
                           </Link>
@@ -362,19 +303,11 @@ export function Header() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={closeMenu}
-              className="flex items-center gap-3 mx-3 my-3 px-4 py-3 text-sm font-semibold rounded-lg transition-all duration-200"
+              className="flex items-center gap-2 mx-4 my-3 px-4 py-2.5 text-sm font-medium rounded-md transition-colors duration-150 hover:opacity-80"
               style={{
-                color: "rgb(241, 245, 249)",
-                border: "1px solid #f59e0b",
-                background: "linear-gradient(rgb(13, 21, 38) 0%, rgb(10, 20, 40) 100%)",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = "#f59e0b";
-                (e.currentTarget as HTMLAnchorElement).style.background = "linear-gradient(rgb(30, 42, 65) 0%, rgb(20, 35, 58) 100%)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = "rgb(241, 245, 249)";
-                (e.currentTarget as HTMLAnchorElement).style.background = "linear-gradient(rgb(13, 21, 38) 0%, rgb(10, 20, 40) 100%)";
+                color: "var(--text-primary)",
+                border: "1px solid var(--border-default)",
+                background: "rgba(255,255,255,0.04)",
               }}
             >
               <svg
@@ -395,11 +328,11 @@ export function Header() {
 
         {/* ドロワーフッター */}
         <div
-          className="px-5 py-4"
-          style={{ borderTop: "1px solid rgba(245,158,11,0.1)" }}
+          className="px-5 py-3"
+          style={{ borderTop: "1px solid var(--border-default)" }}
         >
-          <p className="text-xs" style={{ color: "#334155" }}>
-            ⚾ 草野球レポート
+          <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+            草野球レポート
           </p>
         </div>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
@@ -91,53 +91,29 @@ function getResultType(result: string | null): "win" | "loss" | "draw" | "unknow
   return "unknown";
 }
 
-/** 結果に応じた背景色とテキスト色のクラスを返す */
-function getResultStyle(result: string | null): string {
+/** 結果に応じたバッジスタイル（インラインstyle）を返す */
+function getResultBadgeStyle(result: string | null): React.CSSProperties {
   const resultType = getResultType(result);
   switch (resultType) {
     case "win":
-      return "bg-red-700 text-white";
+      return { background: "var(--color-win-dim)", color: "var(--color-win)", border: "1px solid rgba(22,163,74,0.3)" };
     case "loss":
-      return "bg-blue-700 text-white";
+      return { background: "var(--color-loss-dim)", color: "var(--color-loss)", border: "1px solid rgba(220,38,38,0.3)" };
     case "draw":
-      return "bg-gray-700 text-white";
+      return { background: "var(--color-draw-dim)", color: "var(--color-draw)", border: "1px solid rgba(107,114,128,0.3)" };
     default:
-      return "bg-gray-700 text-white";
+      return { background: "rgba(255,255,255,0.06)", color: "var(--text-muted)", border: "1px solid rgba(255,255,255,0.1)" };
   }
 }
 
-/** 結果に応じたアイコンを返す */
-function getResultIcon(result: string | null) {
+/** 結果に応じたテキストを返す */
+function getResultLabel(result: string | null): string {
   const resultType = getResultType(result);
-  
   switch (resultType) {
-    case "win":
-      return (
-        <p>◯</p>
-      );
-    case "loss":
-      return (
-        <p>●</p>
-      );
-    case "draw":
-      return (
-        <p>△</p>
-      );
-    default:
-      return (
-        <svg
-          className="w-4 h-4"
-          fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <path d="M12 8v4M12 16h.01" />
-        </svg>
-      );
+    case "win":  return "勝";
+    case "loss": return "負";
+    case "draw": return "分";
+    default:     return "—";
   }
 }
 
@@ -511,7 +487,7 @@ export function GameList() {
                   <div key={dateKey}>
                     {/* 月のヘッダー */}
                     {showMonthHeader && (
-                      <div className="w-full bg-[#3b5dbc] text-white text-lg font-bold mb-3 pt-2 pb-2 px-4 rounded">
+                      <div className="text-base font-semibold mb-3 px-1" style={{ color: "var(--text-dimmed)" }}>
                         {currentMonth}月
                       </div>
                     )}
@@ -537,63 +513,80 @@ export function GameList() {
                         
                         const gameDate = parseDate(game.date);
                         
+                        const resultLabel = getResultLabel(game.result);
+                        const resultBadgeStyle = getResultBadgeStyle(game.result);
+
                         const content = (
                           <>
-                            {/* 上部：日と曜日 */}
-                            <div className="text-base font-medium">
-                              {gameDate ? `${gameDate.getDate()}(${getDayOfWeek(gameDate)})` : ""}
+                            {/* 上部：日と曜日 + 結果バッジ */}
+                            <div className="flex items-center justify-between">
+                              <div className="text-sm" style={{ color: "var(--text-muted)" }}>
+                                {gameDate ? `${gameDate.getDate()}(${getDayOfWeek(gameDate)})` : ""}
+                              </div>
+                              {resultLabel !== "—" && (
+                                <span
+                                  className="inline-flex items-center justify-center w-6 h-6 rounded text-sm font-bold"
+                                  style={resultBadgeStyle}
+                                >
+                                  {resultLabel}
+                                </span>
+                              )}
                             </div>
-                            
+
                             {/* 中部：左側にチーム名・対戦チーム名、右側にスコア */}
                             <div className="flex items-center justify-between">
                               <div className="flex flex-col">
-                                {/* チーム名 */}
                                 <div className="text-base font-medium">
                                   {teamDisplayName}
                                 </div>
-                                {/* vs 対戦チーム名 */}
-                                <div className="text-lg">
+                                <div className="text-sm" style={{ color: "var(--text-dimmed)" }}>
                                   vs {opponentDisplayName}
                                 </div>
                               </div>
                               {/* スコア */}
-                              <div className="text-4xl font-bold">
+                              <div className="text-3xl font-bold font-mono-num">
                                 {ourScore ?? 0} - {opponentScore ?? 0}
                               </div>
                             </div>
-                            
+
                             {/* 下部：責任投手（横並び） */}
-                            <div className="flex items-center gap-3 flex-wrap min-h-8">
+                            <div className="flex items-center gap-3 flex-wrap min-h-6">
                               {game.win_pitcher && (
                                 <div className="flex items-center gap-1.5">
-                                  <span className="inline-flex items-center justify-center w-6 h-6 bg-red-600 text-white text-base font-medium rounded">
+                                  <span
+                                    className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold rounded"
+                                    style={{ background: "var(--color-win-dim)", color: "var(--color-win)" }}
+                                  >
                                     勝
                                   </span>
-                                  <span className="text-base text-foreground">{game.win_pitcher}</span>
+                                  <span className="text-sm" style={{ color: "var(--text-dimmed)" }}>{game.win_pitcher}</span>
                                 </div>
                               )}
                               {game.lose_pitcher && (
                                 <div className="flex items-center gap-1.5">
-                                  <span className="inline-flex items-center justify-center w-6 h-6 bg-blue-600 text-white text-base font-medium rounded">
+                                  <span
+                                    className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold rounded"
+                                    style={{ background: "var(--color-loss-dim)", color: "var(--color-loss)" }}
+                                  >
                                     負
                                   </span>
-                                  <span className="text-base text-foreground">{game.lose_pitcher}</span>
+                                  <span className="text-sm" style={{ color: "var(--text-dimmed)" }}>{game.lose_pitcher}</span>
                                 </div>
                               )}
                             </div>
                           </>
                         );
-                        
+
                         return gameHref ? (
                           <Link
                             key={game.key}
                             href={gameHref}
-                            className="block border rounded-lg p-4 space-y-3 hover:bg-muted/50 transition-colors"
+                            className="block border rounded-lg p-4 space-y-2 hover:bg-muted/50 transition-colors"
                           >
                             {content}
                           </Link>
                         ) : (
-                          <div key={game.key} className="border rounded-lg p-4 space-y-3">
+                          <div key={game.key} className="border rounded-lg p-4 space-y-2">
                             {content}
                           </div>
                         );
@@ -609,23 +602,23 @@ export function GameList() {
               {sortedMonths.map((monthKey) => {
                 const monthGames = gamesByMonth.get(monthKey) || [];
                 if (monthGames.length === 0) return null;
-                
+
                 const month = parseInt(monthKey.slice(4, 6));
-                
+
                 return (
                   <div key={monthKey}>
                     {/* 月のヘッダー */}
-                    <div className="w-full bg-[#3b5dbc] text-white text-lg font-bold mb-4 pt-2 pb-2 px-4 rounded">
+                    <div className="text-base font-semibold mb-3 px-1" style={{ color: "var(--text-dimmed)" }}>
                       {month}月
                     </div>
-                    
+
                     {/* 試合を2列のグリッドで表示 */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {monthGames.map((game) => {
                         const ourTeamName = getTeamNameByKey(teamKeyToName, game.team);
                         const ourTeamKey = game.team;
                         const gameHref = getGameDetailHref(game);
-                        
+
                         // 対戦相手を判定
                         const isTopTeam = ourTeamName && game.top_team === ourTeamName;
                         const opponentTeamRaw = isTopTeam ? game.bottom_team : game.top_team;
@@ -639,64 +632,80 @@ export function GameList() {
                         const opponentDisplayName = getDisplayTeamName(opponentTeamRaw, opponentTeamRaw);
                         
                         const gameDate = parseDate(game.date);
-                        
+                        const resultLabel = getResultLabel(game.result);
+                        const resultBadgeStyle = getResultBadgeStyle(game.result);
+
                         const content = (
                           <>
-                            {/* 上部：日と曜日 */}
-                            <div className="text-base font-medium">
-                              {gameDate ? `${gameDate.getDate()}(${getDayOfWeek(gameDate)})` : ""}
+                            {/* 上部：日と曜日 + 結果バッジ */}
+                            <div className="flex items-center justify-between">
+                              <div className="text-sm" style={{ color: "var(--text-muted)" }}>
+                                {gameDate ? `${gameDate.getDate()}(${getDayOfWeek(gameDate)})` : ""}
+                              </div>
+                              {resultLabel !== "—" && (
+                                <span
+                                  className="inline-flex items-center justify-center w-6 h-6 rounded text-sm font-bold"
+                                  style={resultBadgeStyle}
+                                >
+                                  {resultLabel}
+                                </span>
+                              )}
                             </div>
-                            
+
                             {/* 中部：左側にチーム名・対戦チーム名、右側にスコア */}
                             <div className="flex items-center justify-between">
                               <div className="flex flex-col">
-                                {/* チーム名 */}
                                 <div className="text-base font-medium">
                                   {teamDisplayName}
                                 </div>
-                                {/* vs 対戦チーム名 */}
-                                <div className="text-lg">
+                                <div className="text-sm" style={{ color: "var(--text-dimmed)" }}>
                                   vs {opponentDisplayName}
                                 </div>
                               </div>
                               {/* スコア */}
-                              <div className="text-4xl font-bold">
+                              <div className="text-3xl font-bold font-mono-num">
                                 {ourScore ?? 0} - {opponentScore ?? 0}
                               </div>
                             </div>
-                            
+
                             {/* 下部：責任投手（横並び） */}
-                            <div className="flex items-center gap-3 flex-wrap min-h-8">
+                            <div className="flex items-center gap-3 flex-wrap min-h-6">
                               {game.win_pitcher && (
                                 <div className="flex items-center gap-1.5">
-                                  <span className="inline-flex items-center justify-center w-6 h-6 bg-red-600 text-white text-base font-medium rounded">
+                                  <span
+                                    className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold rounded"
+                                    style={{ background: "var(--color-win-dim)", color: "var(--color-win)" }}
+                                  >
                                     勝
                                   </span>
-                                  <span className="text-base text-foreground">{game.win_pitcher}</span>
+                                  <span className="text-sm" style={{ color: "var(--text-dimmed)" }}>{game.win_pitcher}</span>
                                 </div>
                               )}
                               {game.lose_pitcher && (
                                 <div className="flex items-center gap-1.5">
-                                  <span className="inline-flex items-center justify-center w-6 h-6 bg-blue-600 text-white text-base font-medium rounded">
+                                  <span
+                                    className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold rounded"
+                                    style={{ background: "var(--color-loss-dim)", color: "var(--color-loss)" }}
+                                  >
                                     負
                                   </span>
-                                  <span className="text-base text-foreground">{game.lose_pitcher}</span>
+                                  <span className="text-sm" style={{ color: "var(--text-dimmed)" }}>{game.lose_pitcher}</span>
                                 </div>
                               )}
                             </div>
                           </>
                         );
-                        
+
                         return gameHref ? (
                           <Link
                             key={game.key}
                             href={gameHref}
-                            className="block border rounded-lg p-4 space-y-3 hover:bg-muted/50 transition-colors"
+                            className="block border rounded-lg p-4 space-y-2 hover:bg-muted/50 transition-colors"
                           >
                             {content}
                           </Link>
                         ) : (
-                          <div key={game.key} className="border rounded-lg p-4 space-y-3">
+                          <div key={game.key} className="border rounded-lg p-4 space-y-2">
                             {content}
                           </div>
                         );
