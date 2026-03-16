@@ -7,12 +7,6 @@ import type { Team } from "@/lib/types";
 import { getDisplayTeamName } from "@/lib/utils";
 import { Announcements } from "@/components/Announcements";
 
-const cardLinks = [
-  { key: "game", label: "試合結果", path: (teamKey: string) => `/game?team=${teamKey}` },
-  { key: "stats", label: "チーム成績", path: (teamKey: string) => `/team/${teamKey}/stats` },
-  { key: "player", label: "選手一覧", path: (teamKey: string) => `/team/${teamKey}/player` },
-];
-
 export default function Home() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,19 +52,16 @@ export default function Home() {
       <>
         <Announcements />
         <div className="space-y-6 mt-4">
-          <div className="animate-fade-slide-up animate-stagger-1">
-            <h2
-              className="font-sport text-2xl font-bold mb-1"
-              style={{ color: "#f1f5f9", fontFamily: "var(--font-oswald), sans-serif", letterSpacing: "0.06em" }}
-            >
-              SELECT YOUR TEAM
+          <div>
+            <h2 className="text-lg font-semibold mb-1" style={{ color: "var(--text-primary)" }}>
+              チーム選択
             </h2>
-            <p style={{ color: "#64748b", fontSize: "0.875rem" }}>データを見たいチームを選択してください</p>
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>データを見たいチームを選択してください</p>
           </div>
           <div className="flex items-center justify-center min-h-[200px]">
-            <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-col items-center gap-3">
               <div className="sport-spinner" />
-              <p style={{ color: "#64748b", fontSize: "0.875rem" }}>読み込み中...</p>
+              <p className="text-sm" style={{ color: "var(--text-muted)" }}>読み込み中...</p>
             </div>
           </div>
         </div>
@@ -83,15 +74,12 @@ export default function Home() {
       <>
         <Announcements />
         <div className="space-y-4 mt-4">
-          <h2
-            className="font-sport text-2xl font-bold mb-1"
-            style={{ color: "#f1f5f9", fontFamily: "var(--font-oswald), sans-serif", letterSpacing: "0.06em" }}
-          >
-            SELECT YOUR TEAM
+          <h2 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
+            チーム選択
           </h2>
           <div
-            className="p-4 rounded-xl"
-            style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", color: "#ef4444" }}
+            className="p-4 rounded-lg text-sm"
+            style={{ background: "var(--color-loss-dim)", border: "1px solid rgba(220,38,38,0.3)", color: "var(--color-loss)" }}
           >
             {error}
           </div>
@@ -106,17 +94,14 @@ export default function Home() {
       <div className="space-y-6 mt-4">
         {/* セクションヘッダー */}
         <div className="animate-fade-slide-up animate-stagger-1">
-          <h2
-            className="font-sport text-2xl font-bold mb-1"
-            style={{ color: "#f1f5f9", fontFamily: "var(--font-oswald), sans-serif", letterSpacing: "0.06em" }}
-          >
-            SELECT YOUR TEAM
+          <h2 className="text-lg font-semibold mb-1" style={{ color: "var(--text-primary)" }}>
+            チーム選択
           </h2>
-          <p style={{ color: "#64748b", fontSize: "0.875rem" }}>データを見たいチームを選択してください</p>
+          <p className="text-sm" style={{ color: "var(--text-muted)" }}>データを見たいチームを選択してください</p>
         </div>
 
         {/* チームグリッド */}
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
           {teams.map((team, index) => {
             const teamKey = team.key;
             const displayName = getDisplayTeamName(team.team_name, team.key);
@@ -126,57 +111,82 @@ export default function Home() {
               <div
                 key={team.key}
                 className={`sport-card animate-fade-slide-up ${staggerClass}`}
-                style={{ padding: "20px 24px" }}
+                style={{ padding: "16px 20px" }}
               >
                 {/* チーム名 */}
-                <div className="mb-4 pb-3" style={{ borderBottom: "1px solid rgba(245,158,11,0.12)" }}>
+                <div className="mb-4">
                   <div
-                    className="font-sport text-2xl font-bold"
-                    style={{
-                      color: "#f1f5f9",
-                      fontFamily: "var(--font-oswald), sans-serif",
-                      letterSpacing: "0.04em",
-                      lineHeight: 1.2,
-                    }}
+                    className="text-xl font-bold leading-tight"
+                    style={{ color: "var(--text-primary)" }}
                   >
                     {displayName}
                   </div>
+                  {/* フルネーム（略称と同じ場合も高さを確保するため常にレンダリング） */}
                   <div
-                    className="mt-1 text-xs truncate"
-                    style={{ color: "#64748b", maxWidth: "100%" }}
+                    className="mt-0.5 text-xs truncate"
+                    style={{
+                      color: team.team_name && team.team_name !== displayName ? "var(--text-muted)" : "transparent",
+                      userSelect: "none",
+                    }}
                     title={team.team_name ?? undefined}
                   >
-                    {team.team_name}
+                    {team.team_name || "\u00a0"}
                   </div>
                 </div>
 
-                {/* リンクリスト */}
-                <ul className="space-y-1.5 list-none m-0 p-0">
-                  {cardLinks.map((link) => (
-                    <li key={link.key}>
-                      <Link
-                        href={link.path(teamKey)}
-                        className="flex items-center gap-2 text-sm rounded-md px-3 py-2 transition-all duration-200 group"
-                        style={{ color: "#94a3b8" }}
-                        onMouseEnter={(e) => {
-                          const el = e.currentTarget as HTMLAnchorElement;
-                          el.style.color = "#f59e0b";
-                          el.style.background = "rgba(245,158,11,0.08)";
-                          el.style.paddingLeft = "16px";
-                        }}
-                        onMouseLeave={(e) => {
-                          const el = e.currentTarget as HTMLAnchorElement;
-                          el.style.color = "#94a3b8";
-                          el.style.background = "transparent";
-                          el.style.paddingLeft = "12px";
-                        }}
-                      >
-                        <span style={{ color: "#f59e0b", fontSize: "0.5rem", opacity: 0.7 }}>▶</span>
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+                {/* プライマリアクション: チーム成績 */}
+                <Link
+                  href={`/team/${teamKey}/stats`}
+                  className="flex items-center justify-between w-full rounded-md px-3 py-2 mb-2 text-sm font-medium transition-colors duration-150"
+                  style={{
+                    background: "var(--color-brand-dim)",
+                    color: "var(--text-primary)",
+                    border: "1px solid rgba(59,93,188,0.3)",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLAnchorElement).style.background = "rgba(59,93,188,0.3)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLAnchorElement).style.background = "var(--color-brand-dim)";
+                  }}
+                >
+                  チーム成績
+                  <span style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>→</span>
+                </Link>
+
+                {/* セカンダリリンク */}
+                <div className="flex gap-2">
+                  <Link
+                    href={`/game?team=${teamKey}`}
+                    className="flex-1 text-center text-xs py-1.5 rounded transition-colors duration-150"
+                    style={{ color: "var(--text-muted)", background: "rgba(255,255,255,0.04)" }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLAnchorElement).style.color = "var(--text-dimmed)";
+                      (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.07)";
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLAnchorElement).style.color = "var(--text-muted)";
+                      (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.04)";
+                    }}
+                  >
+                    試合結果
+                  </Link>
+                  <Link
+                    href={`/team/${teamKey}/player`}
+                    className="flex-1 text-center text-xs py-1.5 rounded transition-colors duration-150"
+                    style={{ color: "var(--text-muted)", background: "rgba(255,255,255,0.04)" }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLAnchorElement).style.color = "var(--text-dimmed)";
+                      (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.07)";
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLAnchorElement).style.color = "var(--text-muted)";
+                      (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.04)";
+                    }}
+                  >
+                    選手一覧
+                  </Link>
+                </div>
               </div>
             );
           })}
@@ -184,10 +194,10 @@ export default function Home() {
 
         {teams.length === 0 && (
           <div
-            className="p-8 rounded-xl text-center"
-            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+            className="p-8 rounded-lg text-center text-sm"
+            style={{ background: "rgba(255,255,255,0.03)", border: "1px solid var(--border-default)", color: "var(--text-muted)" }}
           >
-            <p style={{ color: "#64748b" }}>チームが登録されていません</p>
+            チームが登録されていません
           </div>
         )}
       </div>

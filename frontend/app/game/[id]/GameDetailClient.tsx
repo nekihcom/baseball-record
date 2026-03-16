@@ -267,151 +267,103 @@ export default function GameDetailPage({ params }: Props) {
   return (
     <div className="space-y-6">
       {/* 試合概要 */}
-      <div className="px-0 py-3 animate-fade-slide-up animate-stagger-1">
-        <div className="flex items-center justify-between">
-          <div className="flex-1">
-            <div
-              className="font-sport text-2xl font-bold mb-1"
-              style={{ color: "#f1f5f9", fontFamily: "var(--font-oswald), sans-serif", letterSpacing: "0.04em" }}
-            >
-              {getDisplayTeamName(game.top_team, null)} VS {getDisplayTeamName(game.bottom_team, null)}
-            </div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <p style={{ color: "#64748b", fontSize: "0.875rem" }}>{formatGameDate(game.date)} {game.start_time || ""}</p>
-              <p style={{ color: "#64748b", fontSize: "0.875rem" }}>{game.place || ""}</p>
-            </div>
-          </div>
+      <div className="py-3 animate-fade-slide-up animate-stagger-1">
+        <div className="text-xl font-bold mb-1" style={{ color: "var(--text-primary)" }}>
+          {getDisplayTeamName(game.top_team, null)} vs {getDisplayTeamName(game.bottom_team, null)}
+        </div>
+        <div className="flex items-center gap-2 flex-wrap text-sm" style={{ color: "var(--text-muted)" }}>
+          <span>{formatGameDate(game.date)}{game.start_time ? ` ${game.start_time}` : ""}</span>
+          {game.place && <span>· {game.place}</span>}
         </div>
       </div>
       
+      {/* スコアボード */}
       <div>
         <div className="w-full overflow-x-auto">
-            <table className="min-w-max text-sm border-collapse">
-              <thead className="bg-[#3b5dbc] text-white">
-                <tr className="border-b">
-                  <th className="sticky left-0 z-10 bg-[#3b5dbc] px-2 py-1 text-left font-semibold whitespace-nowrap">
-                    チーム
+          <table className="min-w-max text-sm border-collapse">
+            <thead style={{ background: "var(--color-brand)" }} className="text-white">
+              <tr className="border-b">
+                <th className="sticky left-0 z-10 px-3 py-2 text-left font-semibold whitespace-nowrap" style={{ background: "var(--color-brand)" }}>
+                  チーム
+                </th>
+                {[1, 2, 3, 4, 5, 6, 7].map((inning) => (
+                  <th
+                    key={inning}
+                    className="px-2 py-2 text-center font-semibold whitespace-nowrap min-w-[36px]"
+                  >
+                    {inning}
                   </th>
-                  {[1, 2, 3, 4, 5, 6, 7].map((inning) => (
-                    <th
-                      key={inning}
-                      className="px-2 py-1 text-center font-semibold whitespace-nowrap min-w-[40px]"
+                ))}
+                <th className="px-3 py-2 text-center font-semibold whitespace-nowrap">計</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b" style={{ borderColor: "var(--border-default)" }}>
+                <td className="sticky left-0 z-10 px-3 py-2 font-medium whitespace-nowrap" style={{ background: "var(--bg-primary)" }}>
+                  {getDisplayTeamName(game.top_team, null)}
+                </td>
+                {topInningScores.map((score, index) => (
+                  <td key={index} className="px-2 py-2 text-center font-mono-num whitespace-nowrap">
+                    {score !== null ? score : ""}
+                  </td>
+                ))}
+                <td className="px-3 py-2 text-center font-bold font-mono-num whitespace-nowrap">
+                  {game.top_team_score !== null ? game.top_team_score : "—"}
+                </td>
+              </tr>
+              <tr>
+                <td className="sticky left-0 z-10 px-3 py-2 font-medium whitespace-nowrap" style={{ background: "var(--bg-primary)" }}>
+                  {getDisplayTeamName(game.bottom_team, null)}
+                </td>
+                {bottomInningScores.map((score, index) => (
+                  <td key={index} className="px-2 py-2 text-center font-mono-num whitespace-nowrap">
+                    {score !== null ? score : ""}
+                  </td>
+                ))}
+                <td className="px-3 py-2 text-center font-bold font-mono-num whitespace-nowrap">
+                  {game.bottom_team_score !== null ? game.bottom_team_score : "—"}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* 責任投手・本塁打 */}
+        <div className="mt-4">
+          <dl className="flex flex-wrap gap-x-6 gap-y-2">
+            {[
+              { label: "勝", name: game.win_pitcher, link: getPitcherPlayerLink(game.win_pitcher, pitcherStats), clean: true },
+              { label: "負", name: game.lose_pitcher, link: getPitcherPlayerLink(game.lose_pitcher, pitcherStats), clean: true },
+              { label: "S", name: game.save_pitcher, link: getPitcherPlayerLink(game.save_pitcher, pitcherStats), clean: true },
+              { label: "HR", name: game.hr_player, link: getHitterPlayerLink(game.hr_player, hitterStats), clean: false },
+            ]
+              .filter((item) => item.name)
+              .map((item) => {
+                const displayName = item.clean ? cleanPitcherName(item.name) : (item.name || "");
+                return (
+                  <div key={item.label} className="flex items-center gap-1.5 text-sm">
+                    <span
+                      className="inline-flex items-center justify-center w-5 h-5 rounded text-xs font-bold shrink-0"
+                      style={{ background: "var(--color-brand-dim)", color: "var(--text-dimmed)" }}
                     >
-                      {inning}
-                    </th>
-                  ))}
-                  <th className="px-2 py-1 text-center font-semibold whitespace-nowrap">計</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b">
-                  <td className="sticky left-0 z-10 bg-[#0f1524] px-2 py-1 font-medium whitespace-nowrap">
-                    {getDisplayTeamName(game.top_team, null)}
-                  </td>
-                  {topInningScores.map((score, index) => (
-                    <td key={index} className="px-2 py-1 text-center whitespace-nowrap">
-                      {score !== null ? score : ""}
-                    </td>
-                  ))}
-                  <td className="px-2 py-1 text-center font-medium whitespace-nowrap">
-                    {game.top_team_score !== null ? game.top_team_score : "—"}
-                  </td>
-                </tr>
-                <tr className="border-b last:border-b-0">
-                  <td className="sticky left-0 z-10 bg-[#0f1524] px-2 py-1 font-medium whitespace-nowrap">
-                    {getDisplayTeamName(game.bottom_team, null)}
-                  </td>
-                  {bottomInningScores.map((score, index) => (
-                    <td key={index} className="px-2 py-1 text-center whitespace-nowrap">
-                      {score !== null ? score : ""}
-                    </td>
-                  ))}
-                  <td className="px-2 py-1 text-center font-medium whitespace-nowrap">
-                    {game.bottom_team_score !== null ? game.bottom_team_score : "—"}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-                    
-          {/* 責任投手欄 */}
-          <div className="my-12">
-            <div className="text-2xl font-bold mb-1">
-              <p>責任投手</p>
-            </div>
-            <table className="w-full border-collapse">
-              <tbody>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold bg-[#3b5dbc]">勝</td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {(() => {
-                      const link = getPitcherPlayerLink(game.win_pitcher, pitcherStats);
-                      const name = cleanPitcherName(game.win_pitcher) || "";
-                      return link ? (
-                        <Link href={`/team/${link.team}/player/${link.playerNumber}`} className="underline underline-offset-2 hover:opacity-70">
-                          {name}
-                        </Link>
-                      ) : (
-                        name
-                      );
-                    })()}
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold bg-[#3b5dbc]">負</td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {(() => {
-                      const link = getPitcherPlayerLink(game.lose_pitcher, pitcherStats);
-                      const name = cleanPitcherName(game.lose_pitcher) || "";
-                      return link ? (
-                        <Link href={`/team/${link.team}/player/${link.playerNumber}`} className="underline underline-offset-2 hover:opacity-70">
-                          {name}
-                        </Link>
-                      ) : (
-                        name
-                      );
-                    })()}
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold bg-[#3b5dbc]">S</td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {game.save_pitcher ? (
-                      (() => {
-                        const link = getPitcherPlayerLink(game.save_pitcher, pitcherStats);
-                        const name = cleanPitcherName(game.save_pitcher) || "";
-                        return link ? (
-                          <Link href={`/team/${link.team}/player/${link.playerNumber}`} className="underline underline-offset-2 hover:opacity-70">
-                            {name}
-                          </Link>
-                        ) : (
-                          name
-                        );
-                      })()
+                      {item.label}
+                    </span>
+                    {item.link ? (
+                      <Link
+                        href={`/team/${item.link.team}/player/${item.link.playerNumber}`}
+                        className="underline underline-offset-2 hover:opacity-70"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        {displayName}
+                      </Link>
                     ) : (
-                      ""
+                      <span style={{ color: "var(--text-primary)" }}>{displayName}</span>
                     )}
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2 text-center w-16 text-white font-bold bg-[#3b5dbc]">HR</td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {(() => {
-                      const link = getHitterPlayerLink(game.hr_player, hitterStats);
-                      const name = game.hr_player || "";
-                      return link ? (
-                        <Link href={`/team/${link.team}/player/${link.playerNumber}`} className="underline underline-offset-2 hover:opacity-70">
-                          {name}
-                        </Link>
-                      ) : (
-                        name
-                      );
-                    })()}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                  </div>
+                );
+              })}
+          </dl>
+        </div>
       </div>
 
       {/* 打者成績・投手成績 */}

@@ -59,13 +59,28 @@
   --bg-card: #1a2235;
   --bg-card-hover: #1e2840;
 
-  /* アクセントカラー */
-  --accent-primary: #f59e0b;
-  --accent-primary-dim: rgba(245, 158, 11, 0.3);
-  --accent-primary-glow: rgba(245, 158, 11, 0.6);
-  --accent-secondary: #10b981;
-  --accent-danger: #ef4444;
-  --accent-blue: #3b5dbc;
+  /*
+   * 色の役割定義（同じ色に複数の意味を持たせない）
+   *
+   * --color-brand   : サイトのブランドカラー。ヘッダー・テーブルヘッダー等の構造的なUI要素に使用
+   * --color-action  : ユーザーの操作を促す色。ホバー・アクティブ状態・フォーカスリングに使用
+   * --color-win     : 勝利の結果を表す状態色
+   * --color-loss    : 敗北の結果を表す状態色
+   * --color-draw    : 引き分けの結果を表す状態色
+   * --color-danger  : エラー・警告・破壊的操作に使用
+   */
+  --color-brand: #3b5dbc;
+  --color-brand-dim: rgba(59, 93, 188, 0.2);
+  --color-action: #f59e0b;
+  --color-action-dim: rgba(245, 158, 11, 0.12);
+  --color-action-border: rgba(245, 158, 11, 0.25);
+  --color-win: #16a34a;
+  --color-win-dim: rgba(22, 163, 74, 0.15);
+  --color-loss: #dc2626;
+  --color-loss-dim: rgba(220, 38, 38, 0.15);
+  --color-draw: #6b7280;
+  --color-draw-dim: rgba(107, 114, 128, 0.15);
+  --color-danger: #ef4444;
 
   /* テキスト */
   --text-primary: #f1f5f9;
@@ -73,8 +88,7 @@
   --text-dimmed: #94a3b8;
 
   /* ボーダー */
-  --border-subtle: rgba(245, 158, 11, 0.15);
-  --border-glow: rgba(245, 158, 11, 0.6);
+  --border-subtle: rgba(255, 255, 255, 0.07);
   --border-default: rgba(255, 255, 255, 0.08);
 
   /* Tailwind テーマ マッピング */
@@ -119,60 +133,11 @@
 @keyframes fadeSlideUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes fadeSlideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes glowPulse {
-  0%, 100% {
-    box-shadow: 0 0 8px rgba(245, 158, 11, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
-  }
-}
-
-@keyframes barGrow {
-  from {
-    transform: scaleY(0);
-    transform-origin: bottom;
-  }
-  to {
-    transform: scaleY(1);
-    transform-origin: bottom;
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% center;
-  }
-  100% {
-    background-position: 200% center;
-  }
-}
-
-@keyframes borderSlide {
-  from {
-    width: 0;
-  }
-  to {
-    width: 100%;
   }
 }
 
@@ -231,16 +196,13 @@
 .sport-card {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-  will-change: transform;
+  border-radius: 10px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .sport-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-glow);
-  border-color: var(--border-glow);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
 /* ============================================================
@@ -253,7 +215,7 @@
 }
 
 .sport-table thead th {
-  background: var(--accent-blue);
+  background: var(--color-brand);
   color: #fff;
   font-size: 0.75rem;
   font-weight: 600;
@@ -262,7 +224,6 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  backdrop-filter: blur(10px);
 }
 
 .sport-table thead th:first-child {
@@ -279,23 +240,8 @@
   position: relative;
 }
 
-.sport-table tbody tr::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 0;
-  background: var(--accent-primary);
-  transition: width 0.2s ease;
-}
-
 .sport-table tbody tr:hover {
-  background: rgba(245, 158, 11, 0.06);
-}
-
-.sport-table tbody tr:hover::before {
-  width: 3px;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .sport-table tbody td {
@@ -315,7 +261,7 @@
 }
 
 .scoreboard-table th {
-  background: rgba(59, 93, 188, 0.8);
+  background: var(--color-brand);
   color: #fff;
   font-size: 0.75rem;
   padding: 6px 8px;
@@ -348,8 +294,8 @@
   left: 0;
   width: 0;
   height: 2px;
-  background: var(--accent-primary);
-  transition: width 0.25s ease;
+  background: var(--color-action);
+  transition: width 0.2s ease;
 }
 
 .nav-link:hover {
@@ -375,10 +321,10 @@
    ローディングスピナー
    ============================================================ */
 .sport-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(245, 158, 11, 0.2);
-  border-top-color: var(--accent-primary);
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--color-action);
   border-radius: 50%;
   animation: spin-slow 0.8s linear infinite;
 }
@@ -397,12 +343,12 @@
 
 .sport-tab:hover {
   color: var(--text-primary);
-  background: rgba(245, 158, 11, 0.08);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .sport-tab[data-state="active"] {
-  color: var(--accent-primary);
-  background: rgba(245, 158, 11, 0.12);
+  color: var(--color-action);
+  background: var(--color-action-dim);
 }
 
 /* ============================================================
@@ -432,9 +378,9 @@
 .section-header::before {
   content: '';
   display: block;
-  width: 4px;
-  height: 24px;
-  background: var(--accent-primary);
+  width: 3px;
+  height: 20px;
+  background: var(--color-brand);
   border-radius: 2px;
   flex-shrink: 0;
 }
@@ -453,20 +399,32 @@
 }
 
 .sport-badge-amber {
-  background: rgba(245, 158, 11, 0.15);
-  color: var(--accent-primary);
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  background: var(--color-action-dim);
+  color: var(--color-action);
+  border: 1px solid var(--color-action-border);
 }
 
-.sport-badge-green {
-  background: rgba(16, 185, 129, 0.15);
-  color: var(--accent-secondary);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+.sport-badge-win {
+  background: var(--color-win-dim);
+  color: var(--color-win);
+  border: 1px solid rgba(22, 163, 74, 0.3);
+}
+
+.sport-badge-loss {
+  background: var(--color-loss-dim);
+  color: var(--color-loss);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+.sport-badge-draw {
+  background: var(--color-draw-dim);
+  color: var(--color-draw);
+  border: 1px solid rgba(107, 114, 128, 0.3);
 }
 
 .sport-badge-red {
   background: rgba(239, 68, 68, 0.15);
-  color: var(--accent-danger);
+  color: var(--color-danger);
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
@@ -498,17 +456,17 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(245, 158, 11, 0.3);
+    background: rgba(59, 93, 188, 0.4);
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(245, 158, 11, 0.6);
+    background: rgba(59, 93, 188, 0.6);
   }
 
   /* セレクション */
   ::selection {
-    background: rgba(245, 158, 11, 0.3);
+    background: rgba(59, 93, 188, 0.35);
     color: var(--text-primary);
   }
 }
