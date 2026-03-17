@@ -224,7 +224,7 @@ npm install
 | 変数名 | 説明 |
 |---|---|
 | `SUPABASE_URL` | SupabaseプロジェクトのURL |
-| `SUPABASE_KEY` | SupabaseプロジェクトのAPIキー |
+| `SUPABASE_SERVICE_KEY` | Supabaseのサービスロールキー（書き込み権限が必要） |
 
 #### フロントエンド (`frontend/.env`)
 
@@ -286,52 +286,84 @@ baseball-record/
 │   │   ├── 05_get_hitter_stats.py   # 打者成績の取得
 │   │   ├── 06_get_pitcher_stats.py  # 投手成績の取得
 │   │   ├── 99_utils.py              # 共通ユーティリティ関数
-│   │   ├── constants.py              # 定数定義
-│   │   ├── load_to_supabase.py      # Supabase一括投入
-│   │   └── update_supabase.py       # Supabase差分更新
+│   │   ├── constants.py             # 定数定義
+│   │   ├── load_to_supabase.py      # Supabase一括投入（初回セットアップ用）
+│   │   └── update_supabase.py       # Supabase差分更新（UPSERT）
 │   ├── ddl/                          # テーブル定義SQL
 │   │   └── create_tables.sql        # 全テーブルのDDL
 │   ├── input/                        # 入力ファイル（CSV）
 │   ├── output/                       # 出力ファイル（CSV）
 │   ├── requirements.txt              # Python依存パッケージ
+│   ├── .env.example                  # 環境変数テンプレート
 │   ├── .env                          # 環境変数（Git管理外）
 │   └── README.md                     # バックエンド詳細仕様書
 ├── frontend/                         # フロントエンド
 │   ├── app/                          # Next.js App Router
 │   │   ├── page.tsx                 # トップページ
 │   │   ├── layout.tsx               # 共通レイアウト
+│   │   ├── error.tsx                # グローバルエラーバウンダリ
+│   │   ├── not-found.tsx            # 404ページ
+│   │   ├── sitemap.ts               # 動的サイトマップ生成
 │   │   ├── globals.css              # グローバルCSS
 │   │   ├── game/                    # 試合関連ページ
 │   │   │   ├── page.tsx            # 試合結果一覧
-│   │   │   └── [id]/page.tsx       # 試合詳細
-│   │   └── team/                    # チーム関連ページ
-│   │       ├── page.tsx            # チーム一覧
-│   │       └── [team]/             # チーム別ページ
-│   │           ├── page.tsx        # チームトップ（リダイレクト）
-│   │           ├── stats/page.tsx  # チーム成績
-│   │           └── player/         # 選手関連ページ
-│   │               ├── page.tsx    # 選手一覧
-│   │               └── [player_number]/page.tsx  # 選手詳細
+│   │   │   └── [id]/               # 試合詳細
+│   │   │       ├── page.tsx
+│   │   │       ├── GameDetailClient.tsx
+│   │   │       └── loading.tsx
+│   │   ├── team/                    # チーム関連ページ
+│   │   │   └── [team]/             # チーム別ページ
+│   │   │       ├── page.tsx        # チームトップ（リダイレクト）
+│   │   │       ├── stats/          # チーム成績
+│   │   │       │   ├── page.tsx
+│   │   │       │   ├── StatsClient.tsx
+│   │   │       │   └── loading.tsx
+│   │   │       └── player/         # 選手関連ページ
+│   │   │           ├── page.tsx    # 選手一覧
+│   │   │           ├── PlayersClient.tsx
+│   │   │           ├── loading.tsx
+│   │   │           └── [player_number]/  # 選手詳細
+│   │   │               ├── page.tsx
+│   │   │               ├── PlayerDetailClient.tsx
+│   │   │               └── loading.tsx
+│   │   ├── demo/page.tsx            # デモページ
+│   │   ├── privacy/page.tsx         # プライバシーポリシー
+│   │   └── terms/page.tsx           # 利用規約
 │   ├── components/                   # Reactコンポーネント
 │   │   ├── ui/                      # UIプリミティブ（Radix UI）
 │   │   └── *.tsx                    # 各種コンポーネント
 │   ├── lib/                          # ユーティリティ・型定義
-│   │   ├── supabase.ts             # Supabaseクライアント
+│   │   ├── supabase.ts             # Supabaseクライアント（クライアントサイド）
+│   │   ├── supabase-server.ts      # Supabaseクライアント（サーバーサイド）
 │   │   ├── types.ts                # 型定義
 │   │   ├── statsTypes.ts           # 成績関連の型定義
 │   │   └── utils.ts                # ユーティリティ関数
+│   ├── public/                       # 静的ファイル
+│   │   └── robots.txt              # クローラー制御
 │   ├── package.json                  # npm依存パッケージ
 │   ├── tsconfig.json                 # TypeScript設定
-│   ├── next.config.ts                # Next.js設定
+│   ├── next.config.ts                # Next.js設定（セキュリティヘッダー・CSP含む）
+│   ├── .env.example                  # 環境変数テンプレート
 │   ├── .env                          # 環境変数（Git管理外）
 │   └── README.md                     # フロントエンド詳細仕様書
+├── supabase/                         # Supabase設定
+│   └── migrations/                  # マイグレーションSQL
+│       └── 20260313000000_enable_rls.sql  # RLS設定
+├── .github/                          # GitHub Actions
+│   └── workflows/
+│       ├── ci.yml                   # Lint + Build チェック
+│       └── scraping-cron.yml        # スクレイピング定期実行（毎週月曜）
+├── docs/                             # ドキュメント
+│   ├── production-launch-tasks.md  # 本番公開向けタスク一覧
+│   ├── system_architecture.png     # 全体アーキテクチャ図
+│   └── git_workflow.png             # ブランチ構成図
 ├── .gitignore                        # Git除外設定
 └── README.md                         # 本ファイル（プロジェクト全体の仕様書）
 ```
 
 ## ブランチ運用ルール
 
-詳細は [.antigravity/rules/git-branch-policy.md](file:///.antigravity/rules/git-branch-policy.md) を参照してください。
+詳細は [CLAUDE.md](CLAUDE.md) を参照してください。
 
 ### ブランチ構成図
 
