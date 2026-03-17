@@ -89,8 +89,10 @@ def scrape_game_hitter_stats(url, team_name, player_lookup=None):
         lookup_key = f"{team}_{pnum}"
         player = player_lookup.get(lookup_key, web_display)
 
-        # key: ${team}_${date}_${start_time}_${game_id}_${player_number}_${player}
-        row_key = f"{team}_{date}_{start_time}_{game_id}_{pnum}_{player}"
+        # key: 背番号がある場合は ${team}_${date}_${start_time}_${game_id}_${player_number}
+        #      背番号がない場合は ${team}_${date}_${start_time}_${game_id}_${player}（名前がキー）
+        pnum_or_name = pnum if pnum and pnum != "-" else player
+        row_key = f"{team}_{date}_{start_time}_{game_id}_{pnum_or_name}"
 
         row = {
             'key': row_key,

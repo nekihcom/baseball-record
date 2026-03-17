@@ -278,6 +278,7 @@ export default function TeamPlayerDetailPage({ params }: Props) {
             )
             .eq("team", team)
             .eq("player", playerName)
+            .eq("player_number", playerNumberInt)
             .eq("delete_flg", 0)
             .like("date", `${currentYear}%`)
             .order("date", { ascending: false })
@@ -295,6 +296,7 @@ export default function TeamPlayerDetailPage({ params }: Props) {
             )
             .eq("team", team)
             .eq("player", playerName)
+            .eq("player_number", playerNumberInt)
             .eq("delete_flg", 0)
             .like("date", `${currentYear}%`)
             .order("date", { ascending: false })
@@ -306,6 +308,7 @@ export default function TeamPlayerDetailPage({ params }: Props) {
             )
             .eq("team", team)
             .eq("player", playerName)
+            .eq("player_number", playerNumberInt)
             .eq("delete_flg", 0)
             .order("date", { ascending: false })
             .order("start_time", { ascending: false }),
@@ -321,6 +324,7 @@ export default function TeamPlayerDetailPage({ params }: Props) {
             )
             .eq("team", team)
             .eq("player", playerName)
+            .eq("player_number", playerNumberInt)
             .eq("delete_flg", 0)
             .order("date", { ascending: false })
             .order("start_time", { ascending: false }),

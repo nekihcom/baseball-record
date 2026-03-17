@@ -50,14 +50,14 @@ export default function Home() {
   if (loading) {
     return (
       <>
-        <Announcements />
+        {/* <Announcements /> */}
         <div className="space-y-6 mt-4">
-          <div>
+          {/* <div>
             <h2 className="text-lg font-semibold mb-1" style={{ color: "var(--text-primary)" }}>
               チーム選択
             </h2>
             <p className="text-sm" style={{ color: "var(--text-muted)" }}>データを見たいチームを選択してください</p>
-          </div>
+          </div> */}
           <div className="flex items-center justify-center min-h-[200px]">
             <div className="flex flex-col items-center gap-3">
               <div className="sport-spinner" />
@@ -72,11 +72,11 @@ export default function Home() {
   if (error) {
     return (
       <>
-        <Announcements />
+        {/* <Announcements /> */}
         <div className="space-y-4 mt-4">
-          <h2 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
+          {/* <h2 className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
             チーム選択
-          </h2>
+          </h2> */}
           <div
             className="p-4 rounded-lg text-sm"
             style={{ background: "var(--color-loss-dim)", border: "1px solid rgba(220,38,38,0.3)", color: "var(--color-loss)" }}
