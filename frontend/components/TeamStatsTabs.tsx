@@ -1372,7 +1372,7 @@ export function TeamStatsTabs({
           </TabsList>
           <TabsContent value="team" className="mt-4 space-y-3">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground whitespace-nowrap">年</span>
+              <span className="text-sm text-muted-foreground whitespace-nowrap">年度</span>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className="min-w-[140px] justify-between">

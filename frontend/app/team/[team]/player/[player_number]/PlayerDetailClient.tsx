@@ -212,7 +212,7 @@ export default function TeamPlayerDetailPage({ params }: Props) {
 
         const currentYear = new Date().getFullYear();
         const playerName = (data as Player).player_name;
-        const hitterKey = `${team}_${currentYear}_${playerNumberInt}_${playerName}`;
+        const hitterKey = `${team}_${currentYear}_${playerNumberInt}`;
 
         const [
           { data: currentYearHitterData, error: currentYearHitterError },
@@ -245,7 +245,7 @@ export default function TeamPlayerDetailPage({ params }: Props) {
             .eq("player_number", playerNumberInt)
             .eq("year", currentYear)
             .eq("delete_flg", 0)
-            .single(),
+            .maybeSingle(),
           supabase
             .from("transaction_pitcher_stats")
             .select("key")
