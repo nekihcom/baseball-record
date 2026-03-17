@@ -83,8 +83,8 @@ def scrape_hitter_stats(team_name, year, player_lookup=None):
         lookup_key = f"{team_name}_{player_number}"
         player = player_lookup.get(lookup_key, "")
 
-        # key: ${team}_${year}_${player_number}_${player}
-        row_key = f"{team_name}_{year}_{player_number}_{player}"
+        # key: ${team}_${year}_${player_number}
+        row_key = f"{team_name}_{year}_{player_number}"
 
         # 各フィールドを取得（要件に従って、2番目のtdから取得）
         # 2番目のtd = インデックス1, 3番目のtd = インデックス2, ...
