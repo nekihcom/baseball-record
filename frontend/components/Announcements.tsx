@@ -11,16 +11,20 @@ function formatHeading(heading: string): string {
   return heading.replace(/(\d{4})-(\d{2})-(\d{2})/g, (_, y, m, d) => `${y}/${Number(m)}/${Number(d)}　`);
 }
 
-type BodyToken = { type: "text"; value: string } | { type: "link"; text: string; href: string };
+type BodyToken = { type: "text"; value: string } | { type: "link"; text: string; href: string } | { type: "br" };
 
 function parseBodyTokens(body: string): BodyToken[] {
   const tokens: BodyToken[] = [];
-  const linkPattern = /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g;
+  const tokenPattern = /\[([^\]]+)\]\((https?:\/\/[^)]+)\)|<br\s*\/>/g;
   let last = 0;
   let match: RegExpExecArray | null;
-  while ((match = linkPattern.exec(body)) !== null) {
+  while ((match = tokenPattern.exec(body)) !== null) {
     if (match.index > last) tokens.push({ type: "text", value: body.slice(last, match.index) });
-    tokens.push({ type: "link", text: match[1], href: match[2] });
+    if (match[0].startsWith("<br")) {
+      tokens.push({ type: "br" });
+    } else {
+      tokens.push({ type: "link", text: match[1], href: match[2] });
+    }
     last = match.index + match[0].length;
   }
   if (last < body.length) tokens.push({ type: "text", value: body.slice(last) });
@@ -152,9 +156,11 @@ export function Announcements() {
                       >
                         {token.text}
                       </a>
-                    ) : (
+                    ) : token.type === "br" ? (
+                      <br key={j} />
+                    ) : "value" in token ? (
                       <span key={j}>{token.value}</span>
-                    )
+                    ) : null
                   )}
                 </p>
               )}
