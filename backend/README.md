@@ -7,7 +7,7 @@
 ## プロジェクト構成
 
 ```
-baseball-record/
+backend/
 ├── src/                          # ソースコード
 │   ├── 00_run_all.py            # メインスクリプト（全スクリプトを順次実行）
 │   ├── 01_get_game_info.py      # 試合情報の取得
@@ -17,11 +17,18 @@ baseball-record/
 │   ├── 05_get_hitter_stats.py   # 打者成績の取得
 │   ├── 06_get_pitcher_stats.py  # 投手成績の取得
 │   ├── 99_utils.py              # 共通ユーティリティ関数
-│   └── constants.py              # 定数定義
+│   ├── constants.py             # 定数定義
+│   ├── load_to_supabase.py      # Supabase一括投入（初回セットアップ用）
+│   └── update_supabase.py       # Supabase差分更新（UPSERT）
+├── ddl/                          # テーブル定義SQL
+│   └── create_tables.sql        # 全テーブルのDDL
 ├── input/                        # 入力ファイル
 │   ├── 00_teams_info.csv        # チーム情報
-│   └── 01_players_info.csv       # 選手情報
-└── output/                       # 出力ファイル（CSV）
+│   └── 01_players_info.csv      # 選手情報
+├── output/                       # 出力ファイル（CSV）
+├── requirements.txt              # Python依存パッケージ
+├── .env.example                  # 環境変数テンプレート
+└── .env                          # 環境変数（Git管理外）
 ```
 
 ## 機能
@@ -379,11 +386,22 @@ whip = (hits_allowed + walks_allowed) / INNING
 
 ## 依存関係
 
-必要なPythonパッケージ：
+必要なPythonパッケージ（`requirements.txt` 参照）：
 
 - `requests` - HTTPリクエスト
 - `beautifulsoup4` - HTMLパース
+- `supabase` - Supabase クライアント（`load_to_supabase.py` / `update_supabase.py` で使用）
+- `python-dotenv` - 環境変数読み込み
 - 標準ライブラリ: `sys`, `subprocess`, `os`, `csv`, `re`, `datetime`
+
+## 環境変数
+
+`backend/.env` ファイルに以下を設定してください（`.env.example` をコピーして使用）：
+
+| 変数名 | 説明 |
+|---|---|
+| `SUPABASE_URL` | SupabaseプロジェクトのURL |
+| `SUPABASE_SERVICE_KEY` | Supabaseのサービスロールキー（書き込み権限が必要） |
 
 ## 注意事項
 
