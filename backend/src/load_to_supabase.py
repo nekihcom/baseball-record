@@ -232,6 +232,30 @@ def _read_csv(path: Path, int_cols: set[str], num_cols: set[str]) -> list[dict]:
     return records
 
 
+# マスターテーブルは手動管理レコードが存在するため削除しない
+MASTER_TABLES = {"master_teams_info", "master_players_info"}
+
+
+def _delete_all(client, table: str) -> None:
+    """テーブルの全レコードを削除する（トランザクションテーブル専用）。"""
+    client.table(table).delete().in_("delete_flg", [0, 1]).execute()
+
+
+def _upsert_batched(client, table: str, records: list[dict]) -> int:
+    """レコードをバッチでUPSERT（マスターテーブル用）。"""
+    now = datetime.now(timezone.utc)
+    n = 0
+    for i in range(0, len(records), BATCH_SIZE):
+        chunk = records[i : i + BATCH_SIZE]
+        for rec in chunk:
+            rec["delete_flg"] = 0
+            rec["created_dt"] = now.isoformat()
+            rec["updated_dt"] = now.isoformat()
+        client.table(table).upsert(chunk).execute()
+        n += len(chunk)
+    return n
+
+
 def _insert_batched(client, table: str, records: list[dict]) -> int:
     """レコードをバッチで投入。削除フラグと日時を自動付与。"""
     now = datetime.now(timezone.utc)
@@ -269,8 +293,15 @@ def main() -> int:
             print(f"スキップ: {table} ({csv_path}) にデータ行がありません", file=sys.stderr)
             continue
         try:
-            inserted = _insert_batched(client, table, records)
-            print(f"投入: {table} {inserted} 件")
+            if table in MASTER_TABLES:
+                # マスターテーブルはUPSERT（手動追加レコードを保護）
+                upserted = _upsert_batched(client, table, records)
+                print(f"UPSERT: {table} {upserted} 件")
+            else:
+                _delete_all(client, table)
+                print(f"削除: {table} の全レコードを削除しました")
+                inserted = _insert_batched(client, table, records)
+                print(f"投入: {table} {inserted} 件")
         except Exception as e:
             print(f"エラー: {table} - {e}", file=sys.stderr)
             return 1
