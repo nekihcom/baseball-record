@@ -233,8 +233,8 @@ def scrape_pitcher_stats(team_name, year, player_lookup=None):
         lookup_key = f"{team_name}_{player_number}"
         player = player_lookup.get(lookup_key, "")
 
-        # key: ${team}_${year}_${player_number}_${player}
-        row_key = f"{team_name}_{year}_{player_number}_{player}"
+        # key: ${team}_${year}_${player_number}
+        row_key = f"{team_name}_{year}_{player_number}"
 
         # 各フィールドを取得（要件に従って、3番目のtdから取得）
         # playerNameが1番目（インデックス0）、次のtdが2番目（インデックス1）、games_playedが3番目（インデックス2）
